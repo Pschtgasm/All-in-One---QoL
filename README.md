@@ -104,7 +104,7 @@ Marlthon-ValheimQol · xtavim-BetterTames · Alpus-BreedingTweaks · Advize-Plan
 
 ## Problems?
 
-`BepInEx\LogOutput.log` shows at start: `All in One QoL 1.1.0 geladen (X Patches OK, Y fehlgeschlagen)`. If a patch fails, only that feature is off – everything else keeps working.
+`BepInEx\LogOutput.log` shows at start: `All in One QoL 1.1.1 geladen (X Patches OK, Y fehlgeschlagen)`. If a patch fails, only that feature is off – everything else keeps working.
 
 ## More from Team Pscht
 
@@ -188,7 +188,7 @@ Diese Mods ausschalten, wenn du diesen Mod nutzt: siehe Liste oben unter *Replac
 
 ## Probleme?
 
-`BepInEx\LogOutput.log` zeigt beim Start: `All in One QoL 1.1.0 geladen (X Patches OK, Y fehlgeschlagen)`. Fällt ein Patch aus, fehlt nur diese Funktion – der Rest läuft weiter.
+`BepInEx\LogOutput.log` zeigt beim Start: `All in One QoL 1.1.1 geladen (X Patches OK, Y fehlgeschlagen)`. Fällt ein Patch aus, fehlt nur diese Funktion – der Rest läuft weiter.
 
 ## Mehr von Team Pscht
 
