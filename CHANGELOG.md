@@ -5,6 +5,7 @@
 - Death tweaks: skill loss factor, keep equipped gear (default on), optionally keep hotbar and food.
 - Sea serpents: spawn chance factor and max number.
 - Steam achievements: work with mods and cheats, unlock already earned achievements on login, clear cheated item marks.
+- Quick connect: main menu button that joins a server address from the config (password is asked by Valheim).
 
 ## 1.1.1
 - Name: now simply "All in One QoL" (by Team Pscht).

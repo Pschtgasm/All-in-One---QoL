@@ -326,6 +326,11 @@ namespace Pscht_QoL
         public static ConfigEntry<bool> AchievementsEnabled;
         public static ConfigEntry<bool> AchievementsSync;
         public static ConfigEntry<bool> AchievementsClearItems;
+        // ---------- 27 Schnellzugriff ----------
+        internal const string QuickSection = "27 - Schnellzugriff Server";
+        public static ConfigEntry<bool> QuickEnabled;
+        public static ConfigEntry<string> QuickAddress;
+        public static ConfigEntry<string> QuickName;
 
         // ---------- Hilfen ----------
 
@@ -805,6 +810,15 @@ namespace Pscht_QoL
                 D("Beim Einloggen werden alle Erfolge freigeschaltet, deren Bedingungen du schon erfüllt hast (z.B. Bosse besiegt, Items gefunden), auch wenn sie damals gesperrt waren.", "aus"));
             AchievementsClearItems = c.Bind(s, "Erfolge: Cheat-Markierung entfernen", true,
                 D("Beim Einloggen wird bei allen Items im Inventar die Markierung „mit Cheats erhalten“ entfernt.", "Markierung bleibt"));
+
+            // ---------- 27 Schnellzugriff Server ----------
+            s = QuickSection;
+            QuickEnabled = c.Bind(s, "Aktiv", true,
+                D("Im Hauptmenü erscheint unter „Spiel starten“ ein Knopf „Server: …“. Klick → Charakter wählen → Start verbindet direkt mit dem Server. Ein Passwort fragt Valheim selbst ab. Gilt nach Neustart des Spiels.", "Server suchen oder IP eintippen"));
+            QuickAddress = c.Bind(s, "Server: Adresse", "",
+                D("Adresse mit Port, z.B. 123.45.67.89:2456 oder meinserver.de:2456. Leer = kein Knopf.", "–"));
+            QuickName = c.Bind(s, "Server: Name", "",
+                D("Name auf dem Knopf, z.B. Team Pscht. Leer = die Adresse wird angezeigt.", "–"));
 
         }
 
