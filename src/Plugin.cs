@@ -10,7 +10,7 @@ namespace Pscht_QoL
     {
         public const string Guid = "pscht.allinoneqol";
         public const string ModName = "All in One QoL";
-        public const string Version = "1.1.1";
+        public const string Version = "1.2.0";
         /// <summary>Konfig-Datei vor 1.0 (BepInEx\config\pscht.qol.cfg) – wird beim ersten Start übernommen.</summary>
         internal const string OldGuid = "pscht.qol";
 

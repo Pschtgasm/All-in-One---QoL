@@ -59,6 +59,10 @@
 | **Extra slots** | **4 armor slots**, wishbone/wisp, **belt** (works in addition!), trinket, **key slot** (swamp crypt key and other door keys), **3 food slots** (eat with **Ctrl+Y / X / C**), **shield slot** (shield is equipped with one-handed weapons) · **second hotbar** with 8 slots (**Alt+1 … Alt+8**) · after death everything goes back into its slots |
 | **Radar** | Dungeon entrances, villages, ruins, tar pits, runestones, shipwrecks, ores, bushes … as pins on the map · window with **F7** |
 | **Inventory helpers** | **Favorites**: middle-click an item – used items are refilled from chests nearby · **compare** weapons, shields and armor in the tooltip · keep weapons in hand at stations · **colored durability bar** |
+| **Trophies** | Trophy chance of all monsters ×2 · optional minimum chance (100 % = always a trophy) |
+| **Death** | Skill loss factor · keep equipped gear · optionally keep hotbar and food |
+| **Sea serpents** | Spawn chance factor and max number in the ocean |
+| **Steam achievements** | Achievements also work with mods and cheats · unlocks achievements you already earned · removes the "cheated" mark from items |
 
 ### Keys
 
@@ -104,7 +108,7 @@ Marlthon-ValheimQol · xtavim-BetterTames · Alpus-BreedingTweaks · Advize-Plan
 
 ## Problems?
 
-`BepInEx\LogOutput.log` shows at start: `All in One QoL 1.1.1 geladen (X Patches OK, Y fehlgeschlagen)`. If a patch fails, only that feature is off – everything else keeps working.
+`BepInEx\LogOutput.log` shows at start: `All in One QoL 1.2.0 geladen (X Patches OK, Y fehlgeschlagen)`. If a patch fails, only that feature is off – everything else keeps working.
 
 ## More from Team Pscht
 
@@ -146,6 +150,10 @@ Marlthon-ValheimQol · xtavim-BetterTames · Alpus-BreedingTweaks · Advize-Plan
 | **Extra-Slots** | **4 Rüstungsslots**, Wünschelrute/Irrlicht, **Gürtel** (wirkt zusätzlich!), Schmuck, **Schlüssel-Slot** (Krypta-Schlüssel aus dem Sumpf und andere Türschlüssel), **3 Essensslots** (essen mit **Strg+Y / X / C**), **Schild-Slot** (Schild wird bei Einhandwaffen angelegt) · **zweite Schnellleiste** mit 8 Slots (**Alt+1 … Alt+8**) · nach dem Tod kommt alles zurück in die Slots |
 | **Radar** | Dungeon-Eingänge, Dörfer, Ruinen, Teergruben, Runensteine, Schiffswracks, Erze, Büsche … als Pins auf der Karte · Fenster mit **F7** |
 | **Inventar-Hilfen** | **Favoriten**: Mausrad-Klick auf ein Item – Verbrauchtes wird aus Kisten aufgefüllt · **Vergleich** von Waffen, Schilden und Rüstung im Tooltip · Waffen an Stationen in der Hand behalten · **farbige Haltbarkeits-Leiste** |
+| **Trophäen** | Trophäen-Chance aller Monster ×2 · auf Wunsch Mindest-Chance (100 % = immer eine Trophäe) |
+| **Tod** | Skill-Verlust-Faktor · angelegte Ausrüstung behalten · auf Wunsch Schnellleiste und Essen behalten |
+| **Seeschlangen** | Spawn-Chance-Faktor und Höchstzahl im Ozean |
+| **Steam-Erfolge** | Erfolge auch mit Mods und Cheats · schon verdiente Erfolge werden nachgeholt · Cheat-Markierung an Items wird entfernt |
 
 ### Tasten
 
@@ -188,7 +196,7 @@ Diese Mods ausschalten, wenn du diesen Mod nutzt: siehe Liste oben unter *Replac
 
 ## Probleme?
 
-`BepInEx\LogOutput.log` zeigt beim Start: `All in One QoL 1.1.1 geladen (X Patches OK, Y fehlgeschlagen)`. Fällt ein Patch aus, fehlt nur diese Funktion – der Rest läuft weiter.
+`BepInEx\LogOutput.log` zeigt beim Start: `All in One QoL 1.2.0 geladen (X Patches OK, Y fehlgeschlagen)`. Fällt ein Patch aus, fehlt nur diese Funktion – der Rest läuft weiter.
 
 ## Mehr von Team Pscht
 

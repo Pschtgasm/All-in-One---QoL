@@ -303,6 +303,29 @@ namespace Pscht_QoL
         internal const string RadarSection = "20 - Radar";
         internal const string SyncSection = "21 - Server-Sync";
         internal const string HelpersSection = "22 - Inventar-Hilfen";
+        internal const string TrophySection = "23 - Trophäen";
+        internal const string DeathSection = "24 - Tod";
+        internal const string SerpentSection = "25 - Seeschlangen";
+        internal const string AchievementSection = "26 - Steam-Erfolge";
+
+        // ---------- 23 Trophäen ----------
+        public static ConfigEntry<bool> TrophyEnabled;
+        public static ConfigEntry<float> TrophyFactor;
+        public static ConfigEntry<float> TrophyMinChance;
+        // ---------- 24 Tod ----------
+        public static ConfigEntry<bool> DeathEnabled;
+        public static ConfigEntry<float> DeathSkillLoss;
+        public static ConfigEntry<bool> DeathKeepEquipped;
+        public static ConfigEntry<bool> DeathKeepHotbar;
+        public static ConfigEntry<bool> DeathKeepFood;
+        // ---------- 25 Seeschlangen ----------
+        public static ConfigEntry<bool> SerpentEnabled;
+        public static ConfigEntry<float> SerpentChance;
+        public static ConfigEntry<int> SerpentMax;
+        // ---------- 26 Steam-Erfolge ----------
+        public static ConfigEntry<bool> AchievementsEnabled;
+        public static ConfigEntry<bool> AchievementsSync;
+        public static ConfigEntry<bool> AchievementsClearItems;
 
         // ---------- Hilfen ----------
 
@@ -745,6 +768,43 @@ namespace Pscht_QoL
                 D("So viel mehr Schaden machen zahme Tiere bei Skill 100.", "0", F(0f, 200f)));
             TameXp = c.Bind(s, "Zähmen: XP-Faktor", 1f,
                 D("Wie schnell der Skill steigt.", "–", F(0.1f, 20f)));
+
+            // ---------- 23 Trophäen ----------
+            s = TrophySection;
+            TrophyEnabled = c.Bind(s, "Aktiv", true, D("Alle Einstellungen dieses Abschnitts ein/aus.", "aus"));
+            TrophyFactor = c.Bind(s, "Trophäen: Chance-Faktor", 2f,
+                D("Die Trophäen-Chance jedes Monsters und Tieres mal diesen Faktor (höchstens 100 %). 2 = doppelt so oft, 1 = normal. Bosse lassen ihre Trophäe sowieso immer fallen. Kommazahlen mit PUNKT.", "1 (z.B. Greyling 10 %, Troll 50 %)", F(0f, 100f)));
+            TrophyMinChance = c.Bind(s, "Trophäen: Mindest-Chance (%)", 0f,
+                D("Jede Trophäe fällt mindestens mit dieser Chance. 100 = jedes Monster lässt immer seine Trophäe fallen. 0 = nur der Faktor zählt.", "0", F(0f, 100f)));
+
+            // ---------- 24 Tod ----------
+            s = DeathSection;
+            DeathEnabled = c.Bind(s, "Aktiv", true, D("Alle Einstellungen dieses Abschnitts ein/aus.", "aus"));
+            DeathSkillLoss = c.Bind(s, "Skill-Verlust: Faktor", 1f,
+                D("Wie viel Skill du beim Tod verlierst, mal diesen Faktor. 0 = kein Verlust, 0.5 = halb so viel, 1 = normal. Kommazahlen mit PUNKT.", "1", F(0f, 5f)));
+            DeathKeepEquipped = c.Bind(s, "Behalten: Angelegte Ausrüstung", true,
+                D("Angelegte Waffen, Rüstung, Umhang, Gürtel usw. bleiben beim Tod an dir. Der Rest kommt wie gewohnt in den Grabstein.", "alles in den Grabstein"));
+            DeathKeepHotbar = c.Bind(s, "Behalten: Schnellleiste", false,
+                D("Die oberste Inventarreihe (Tasten 1–8) bleibt beim Tod in deinem Inventar.", "kommt in den Grabstein"));
+            DeathKeepFood = c.Bind(s, "Behalten: Essen", false,
+                D("Gegessenes Essen wirkt nach dem Tod weiter (Lebenspunkte und Ausdauer bleiben).", "Essen weg"));
+
+            // ---------- 25 Seeschlangen ----------
+            s = SerpentSection;
+            SerpentEnabled = c.Bind(s, "Aktiv", true, D("Alle Einstellungen dieses Abschnitts ein/aus.", "aus"));
+            SerpentChance = c.Bind(s, "Seeschlangen: Spawn-Chance-Faktor", 1f,
+                D("Chance, dass im Ozean eine Seeschlange erscheint, mal diesen Faktor (höchstens 100 %). 2 = doppelt so oft, 0 = keine Seeschlangen mehr. Gilt nach dem nächsten Einloggen.", "1", F(0f, 20f)));
+            SerpentMax = c.Bind(s, "Seeschlangen: Max. Anzahl", 0,
+                D("So viele Seeschlangen dürfen gleichzeitig in deiner Nähe sein. 0 = nicht ändern. Gilt nach dem nächsten Einloggen.", "1", I(0, 10)));
+
+            // ---------- 26 Steam-Erfolge ----------
+            s = AchievementSection;
+            AchievementsEnabled = c.Bind(s, "Aktiv", true,
+                D("Steam-Erfolge gibt es auch mit Mods und nach Cheats (Konsole, devcommands, Weltmodifikatoren). Valheim sperrt sie sonst, sobald ein Mod geladen ist.", "mit Mods oder Cheats keine Erfolge"));
+            AchievementsSync = c.Bind(s, "Erfolge: Fortschritt nachholen", true,
+                D("Beim Einloggen werden alle Erfolge freigeschaltet, deren Bedingungen du schon erfüllt hast (z.B. Bosse besiegt, Items gefunden), auch wenn sie damals gesperrt waren.", "aus"));
+            AchievementsClearItems = c.Bind(s, "Erfolge: Cheat-Markierung entfernen", true,
+                D("Beim Einloggen wird bei allen Items im Inventar die Markierung „mit Cheats erhalten“ entfernt.", "Markierung bleibt"));
 
         }
 

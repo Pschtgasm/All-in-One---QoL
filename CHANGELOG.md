@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0
+- Trophies: trophy chance factor (default ×2) and optional minimum chance for all monsters.
+- Death tweaks: skill loss factor, keep equipped gear (default on), optionally keep hotbar and food.
+- Sea serpents: spawn chance factor and max number.
+- Steam achievements: work with mods and cheats, unlock already earned achievements on login, clear cheated item marks.
+
 ## 1.1.1
 - Name: now simply "All in One QoL" (by Team Pscht).
 - Cultivator: thistles can be planted too (5 thistles), bushes grow back after harvesting. Fix: bushes/mushrooms no longer disappear from the cultivator when another mod (e.g. More Vanilla Build Prefabs) disables them. Harvested bushes, mushrooms and thistles stay (mushrooms/thistles as a small dark stump) and show when they regrow. Regrow time adjustable in the config (default 300 minutes). Plant growth time is now set in minutes with a real default (67 minutes) instead of seconds and 0 (old values are converted).

@@ -30,7 +30,8 @@ namespace Pscht_QoL
             && e.Definition.Section != Cfg.ExtraSlotsSection    // Extra-Slots: Inventar jedes Spielers
             && e.Definition.Section != Cfg.RadarSection         // Radar: stellt jeder selbst ein
             && e.Definition.Section != Cfg.HelpersSection       // Inventar-Hilfen: stellt jeder selbst ein
-            && e.Definition.Section != Cfg.LanguageSection;     // Sprache: stellt jeder selbst ein
+            && e.Definition.Section != Cfg.LanguageSection      // Sprache: stellt jeder selbst ein
+            && e.Definition.Section != Cfg.AchievementSection;  // Steam-Erfolge: Sache jedes Spielers
 
         internal static void Register()
         {
