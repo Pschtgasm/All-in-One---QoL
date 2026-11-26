@@ -65,7 +65,7 @@ namespace Pscht_QoL
         {
             try
             {
-                var lines = new List<string> { "# Pscht QoL – Einstellungen aus dem Spiel (Radar-Fenster F7, Kultivator-Raster). Nicht von Hand nötig." };
+                var lines = new List<string> { "# All in One QoL – Einstellungen aus dem Spiel (Radar-Fenster F7, Kultivator-Raster). Nicht von Hand nötig." };
                 foreach (var kv in _values) lines.Add(kv.Key + " = " + kv.Value);
                 File.WriteAllLines(FilePath, lines);
             }

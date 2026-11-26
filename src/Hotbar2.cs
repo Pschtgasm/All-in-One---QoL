@@ -72,6 +72,7 @@ namespace Pscht_QoL
             if (_root == null) Build(bar);
             if (_root == null) return;
             if (!_root.gameObject.activeSelf) _root.gameObject.SetActive(true);
+            if (_group != null) _group.alpha = Mathf.Clamp(Cfg.Hotbar2Opacity.Value, 0.1f, 1f);
 
             for (int i = 0; i < _slots.Count; i++)
             {
@@ -119,6 +120,8 @@ namespace Pscht_QoL
             }
         }
 
+        private static CanvasGroup _group;
+
         private static void Build(HotkeyBar bar)
         {
             _slots.Clear();
@@ -129,6 +132,10 @@ namespace Pscht_QoL
             float space = bar.m_elementSpace;
             // eine Reihe tiefer als die normale Leiste
             _root.localPosition = new Vector3(0f, -space, 0f);
+            // Durchsichtigkeit regeln, Klicks gehen durch
+            _group = go.AddComponent<CanvasGroup>();
+            _group.blocksRaycasts = false;
+            _group.interactable = true;   // false würde die Felder in der "gesperrt"-Farbe zeigen
 
             for (int i = 0; i < Count; i++)
             {
@@ -163,7 +170,9 @@ namespace Pscht_QoL
                 if (s.Selected != null) s.Selected.SetActive(false);
                 // Klicks sollen nichts auslösen
                 var btn = el.GetComponent<Button>();
-                if (btn != null) btn.interactable = false;
+                // Knopf NICHT abschalten oder sperren: Unity färbt den Hintergrund dann weiß bzw. deckend.
+                // Er bleibt wie in der normalen Leiste, Klicks blockiert die CanvasGroup (blocksRaycasts = false).
+                if (btn != null) btn.onClick.RemoveAllListeners();
                 _slots.Add(s);
             }
             Plugin.LogInfo("Zweite Schnellleiste angelegt (" + Count + " Plätze, Alt+1-8)");

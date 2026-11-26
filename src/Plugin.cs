@@ -9,7 +9,7 @@ namespace Pscht_QoL
     public class Plugin : BaseUnityPlugin
     {
         public const string Guid = "pscht.allinoneqol";
-        public const string ModName = "Pscht - All in One QoL";
+        public const string ModName = "All in One QoL";
         public const string Version = "1.1.0";
         /// <summary>Konfig-Datei vor 1.0 (BepInEx\config\pscht.qol.cfg) – wird beim ersten Start übernommen.</summary>
         internal const string OldGuid = "pscht.qol";
@@ -22,6 +22,7 @@ namespace Pscht_QoL
             Instance = this;
             TakeOverOldConfigFile();
             Cfg.Bind(Config);
+            InventorySize.Hook();
             RemoveOldConfigEntries();
             Exploration.Init();
             CustomSkills.Init();
@@ -132,6 +133,8 @@ namespace Pscht_QoL
             catch (Exception e) { Logger.LogWarning("Radar: " + e.Message); }
             try { PauseSync.OnGUI(); }
             catch (Exception e) { Logger.LogWarning("Pause: " + e.Message); }
+            try { CultivatorGrid.OnGUI(); }
+            catch (Exception e) { Logger.LogWarning("Raster: " + e.Message); }
         }
 
         private void OnDestroy()

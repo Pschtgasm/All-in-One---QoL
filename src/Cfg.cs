@@ -46,13 +46,18 @@ namespace Pscht_QoL
         public static ConfigEntry<bool> PlantsEnabled;
         public static ConfigEntry<bool> PlantAnyBiome;
         public static readonly Fixed<bool> CropsRequireCultivation = new Fixed<bool>(true);
-        public static ConfigEntry<float> PlantGrowSeconds;
+        public static ConfigEntry<float> PlantGrowMinutes;
         public static ConfigEntry<bool> BushesEnabled;
         public static ConfigEntry<int> BushCost;
+        public static ConfigEntry<float> BushRegrowMinutes;
         public static ConfigEntry<string> BushItems;
         internal const string BushDefaultOld = "Raspberry,Blueberries,Cloudberry,Mushroom,MushroomYellow,MushroomBlue,MushroomSmokePuff";
         internal const string BushDefault = BushDefaultOld + ",Thistle";
         public static ConfigEntry<bool> GridEnabled;
+        public static ConfigEntry<bool> GridLines;
+        public static ConfigEntry<KeyCode> GridWheelWidthKey;
+        public static ConfigEntry<KeyCode> GridWheelLengthKey;
+        public static ConfigEntry<bool> GridSeedInfo;
         public static readonly Stored<int> GridWidth = new Stored<int>("Raster.Breite", 3);
         public static readonly Stored<int> GridLength = new Stored<int>("Raster.Laenge", 3);
         public static readonly Fixed<float> GridSpacing = new Fixed<float>(0f);
@@ -240,6 +245,7 @@ namespace Pscht_QoL
         public static ConfigEntry<bool> BeltSlotEnabled;
         public static ConfigEntry<bool> FoodSlotsEnabled;
         public static ConfigEntry<bool> ShieldSlotEnabled;
+        public static ConfigEntry<bool> KeySlotEnabled;
         public static ConfigEntry<KeyboardShortcut> FoodKey1;
         public static ConfigEntry<KeyboardShortcut> FoodKey2;
         public static ConfigEntry<KeyboardShortcut> FoodKey3;
@@ -247,6 +253,9 @@ namespace Pscht_QoL
         public static readonly Fixed<int> ExtraSlotsOffsetX = new Fixed<int>(80);
         public static readonly Fixed<int> ExtraSlotsOffsetY = new Fixed<int>(0);
         public static ConfigEntry<bool> Hotbar2Enabled;
+        public static ConfigEntry<float> Hotbar2Opacity;
+        public static ConfigEntry<bool> SlotsAfterDeath;
+        public static ConfigEntry<int> InvExtraRows;
         public static ConfigEntry<KeyCode> Hotbar2Modifier;
 
         // ---------- 19 Radar ----------
@@ -386,18 +395,28 @@ namespace Pscht_QoL
             PlantsEnabled = c.Bind(s, "Aktiv", true, D("Alle Einstellungen dieses Abschnitts ein/aus.", "aus"));
             PlantAnyBiome = c.Bind(s, "In jedem Biom pflanzen", true,
                 D("Alle Pflanzen, Setzlinge und Bäume wachsen in jedem Biom.", "nur im passenden Biom"));
-            PlantGrowSeconds = c.Bind(s, "Wachstumszeit (Sekunden)", 0f,
-                D("So viele Sekunden braucht jede Pflanze und jeder Setzling bis zur Ernte (für alle gleich). Beispiel: 600 = 10 Minuten. 0 = nichts ändern, jede Pflanze behält ihre normale Zeit aus Valheim.", "je nach Pflanze ca. 3000–5000 s (50–80 Minuten)", F(0f, 100000f)));
+            PlantGrowMinutes = c.Bind(s, "Wachstumszeit (Minuten)", 67f,
+                D("So viele Minuten braucht jede Pflanze und jeder Setzling bis zur Ernte (für alle gleich). Normal sind etwa 67 Minuten (im Spiel je nach Pflanze 50–83). Es zählt die Zeit, in der du spielst. Beispiel: 10 = 10 Minuten.", "je nach Pflanze ca. 50–83 Minuten", F(0f, 10000f)));
             BushesEnabled = c.Bind(s, "Büsche/Pilze: Mit Kultivator pflanzen", true,
                 D("Himbeer-, Blaubeer-, Moltebeerbüsche, Pilze und Disteln erscheinen im Kultivator (ohne Raster, ganz nah aneinander). Sie wachsen nach dem Ernten wieder nach. Änderung erst nach Neustart.", "nicht pflanzbar"));
             BushCost = c.Bind(s, "Büsche/Pilze: Kosten (Stück)", 5,
                 D("So viele Beeren/Pilze kostet ein Busch bzw. Pilz. Änderung erst nach Neustart.", "–", I(1, 100)));
+            BushRegrowMinutes = c.Bind(s, "Büsche/Pilze: Nachwachsen (Minuten)", 300f,
+                D("So viele Minuten dauert es, bis Büsche, Pilze und Disteln aus der Liste nach dem Ernten wieder erntbar sind. Normal sind 300 Minuten (5 Stunden, wie Himbeer- und Blaubeerbüsche im Spiel). Es zählt die Zeit, in der du spielst (Schlafen spult vor). Beispiel: 60 = eine Stunde. Wirkt nach Neu-Einloggen.", "Büsche 300, Pilze/Disteln wachsen gar nicht nach", F(0f, 10000f)));
             BushItems = c.Bind(s, "Büsche/Pilze: Liste", BushDefault,
                 D("Interne Item-Namen, durch Komma getrennt. Zu jedem wird der passende Busch/Pilz gesucht. Was der Kultivator schon kann (Jotunnpuffs, Magierkappe), wird automatisch übersprungen. Welche gefunden wurden, steht im LogOutput.log.", "–"));
             // 1.2.0: Disteln dazu – alte Standardliste automatisch erweitern
             if (BushItems.Value == BushDefaultOld) BushItems.Value = BushDefault;
             GridEnabled = c.Bind(s, "Raster: Aktiv", true,
                 D("Der Kultivator setzt Pflanzen und Setzlinge im Raster (Vorschau zeigt alle Plätze). Größe im Spiel mit Strg + Pfeiltasten ändern – sie wird gemerkt. Abstand automatisch so eng, wie die Pflanze wachsen kann.", "aus (eine Pflanze pro Klick)"));
+            GridLines = c.Bind(s, "Raster: Linien anzeigen", true,
+                D("Zeigt das Raster als Linien auf dem Boden. Grün = wird gepflanzt, rot = nicht genug Samen, grau = Platz belegt oder Boden nicht bearbeitet.", "keine Linien"));
+            GridSeedInfo = c.Bind(s, "Raster: Samen-Anzeige", true,
+                D("Zeigt unten im Bild, wie viele Samen du hast und wie viele das Raster braucht. Pflanzen, für die es nicht reicht, leuchten rot.", "keine Anzeige"));
+            GridWheelWidthKey = c.Bind(s, "Raster: Mausrad Breite mit", KeyCode.LeftControl,
+                D("Diese Taste halten und am Mausrad drehen = Raster breiter/schmaler (statt die Pflanze zu drehen). None = aus.", "–"));
+            GridWheelLengthKey = c.Bind(s, "Raster: Mausrad Länge mit", KeyCode.LeftAlt,
+                D("Diese Taste halten und am Mausrad drehen = Raster länger/kürzer (statt die Pflanze zu drehen). None = aus.", "–"));
             GridWiderKey = c.Bind(s, "Raster: Taste breiter", new KeyboardShortcut(KeyCode.RightArrow, KeyCode.LeftControl), D("", "–"));
             GridNarrowerKey = c.Bind(s, "Raster: Taste schmaler", new KeyboardShortcut(KeyCode.LeftArrow, KeyCode.LeftControl), D("", "–"));
             GridLongerKey = c.Bind(s, "Raster: Taste länger", new KeyboardShortcut(KeyCode.UpArrow, KeyCode.LeftControl), D("", "–"));
@@ -416,6 +435,8 @@ namespace Pscht_QoL
             PlayerEnabled = c.Bind(s, "Aktiv", true, D("Alle Einstellungen dieses Abschnitts ein/aus (wirkt nach Neu-Einloggen).", "aus"));
             CarryWeight = c.Bind(s, "Tragkraft", 1800f,
                 D("Tragkraft ohne Gürtel. Der Megingjord-Bonus kommt obendrauf.", "300", F(50f, 100000f)));
+            InvExtraRows = c.Bind(s, "Inventar: Zusätzliche Reihen", 0,
+                D("So viele Reihen bekommt das Inventar zusätzlich (je 8 Plätze). Beim Händler gekaufte Reihen kommen obendrauf, höchstens 9 Reihen insgesamt. Wirkt sofort. Achtung: Stellst du den Wert wieder kleiner, fallen Items aus den weggefallenen Reihen auf den Boden.", "0 (4 Reihen)", I(0, 5)));
             BuildDistance = c.Bind(s, "Baudistanz (Meter)", 50f, D("Wie weit entfernt du bauen kannst.", "5 m", F(1f, 200f)));
             InteractDistance = c.Bind(s, "Interaktionsdistanz (Meter)", 10f, D("Wie weit entfernt du Dinge benutzen kannst (E).", "5 m", F(1f, 200f)));
             AutoPickupRange = c.Bind(s, "Auto-Aufsammeln (Meter)", 30f, D("Reichweite zum automatischen Aufsammeln.", "2 m", F(0f, 100f)));
@@ -653,12 +674,18 @@ namespace Pscht_QoL
                 D("2 Slots in der mittleren Spalte: Wünschelrute ODER Irrlicht (normales Hilfsmittel) und Schmuck (Trinket). Angelegtes belegt keinen Inventarplatz. Wirkt nach Neu-Einloggen.", "keine Slots"));
             BeltSlotEnabled = c.Bind(s, "Gürtel-Slot: Aktiv", true,
                 D("Eigener Slot für den Gürtel (Megingiard). Er wirkt dort ZUSÄTZLICH zu Wünschelrute oder Irrlicht – im normalen Spiel geht nur eins davon. Wirkt nach Neu-Einloggen.", "Gürtel teilt sich den Platz mit Wünschelrute/Irrlicht"));
+            KeySlotEnabled = c.Bind(s, "Schlüssel-Slot: Aktiv", true,
+                D("Ein Slot unter dem Schmuck für Schlüssel (z.B. Krypta-Schlüssel aus dem Sumpf). Türen öffnen sich wie gewohnt, der Schlüssel belegt aber keinen Inventarplatz. Aufgehobene Schlüssel wandern von selbst hinein. Erkennt alle Schlüssel, die eine Tür braucht – auch aus anderen Mods. Wirkt nach Neu-Einloggen.", "kein Schlüssel-Slot"));
             FoodKey1 = c.Bind(s, "Essensslots: Taste 1", new KeyboardShortcut(KeyCode.Y, KeyCode.LeftControl), D("Isst das Essen aus dem ersten Essensslot.", "–"));
             FoodKey2 = c.Bind(s, "Essensslots: Taste 2", new KeyboardShortcut(KeyCode.X, KeyCode.LeftControl), D("Isst das Essen aus dem zweiten Essensslot.", "–"));
             FoodKey3 = c.Bind(s, "Essensslots: Taste 3", new KeyboardShortcut(KeyCode.C, KeyCode.LeftControl), D("Isst das Essen aus dem dritten Essensslot.", "–"));
             ExtraSlotsLabels = c.Bind(s, "Beschriftung anzeigen", true, D("Tastenkürzel über den Essensslots, Namen in leeren Rüstungsslots.", "–"));
             Hotbar2Enabled = c.Bind(s, "Zweite Schnellleiste: Aktiv", true,
                 D("Zweite Schnellleiste mit 8 eigenen Slots: im Inventarfenster unter den Extra-Slots, auf dem Bildschirm unter der normalen Leiste. Benutzen mit Alt+1 bis Alt+8. Wirkt nach Neu-Einloggen.", "nur eine Schnellleiste"));
+            Hotbar2Opacity = c.Bind(s, "Zweite Schnellleiste: Deckkraft", 1f,
+                D("Wie durchsichtig die zweite Leiste auf dem Bildschirm ist. 1 = so wie die normale Schnellleiste, kleiner = durchsichtiger.", "–", F(0.1f, 1f)));
+            SlotsAfterDeath = c.Bind(s, "Nach dem Tod: zurück in die Slots", true,
+                D("Holst du deinen Grabstein ab, kommen Essen, zweite Schnellleiste, Rüstung, Schild, Schmuck und Schlüssel wieder in ihre Slots statt ins normale Inventar. Rüstung wird dabei wieder angelegt.", "alles landet im normalen Inventar"));
             Hotbar2Modifier = c.Bind(s, "Zweite Schnellleiste: Taste", KeyCode.LeftAlt,
                 D("Diese Taste halten und 1-8 drücken = Item aus der zweiten Schnellleiste benutzen.", "–"));
 
@@ -795,6 +822,18 @@ namespace Pscht_QoL
             Cap(CapSpinningWheel, "Spinnrad: Max. Flachs", 40f);
             Cap(CapWindmill, "Windmühle: Max. Gerste", 50f);
             Cap(CapEitrRefinery, "Eitr-Raffinerie: Max. Weichgewebe", 20f);
+
+            // Sekunden -> Minuten (Wachstumszeit war früher in Sekunden; Testversion hatte kurz Sekunden)
+            void FromSeconds(ConfigEntry<float> e, string section, string key)
+            {
+                string v = Old(section, key);
+                if (v != null && float.TryParse(v, NumberStyles.Float, CultureInfo.InvariantCulture, out float sec) && sec > 0f)
+                    Take(e, Math.Round(sec / 60f, 1).ToString(CultureInfo.InvariantCulture));
+            }
+            FromSeconds(PlantGrowMinutes, "02 - Pflanzen", "Wachstumszeit (Sekunden)");
+            FromSeconds(BushRegrowMinutes, "02 - Pflanzen", "Büsche/Pilze: Nachwachsen (Sekunden)");
+            FromSeconds(DayMinutes, "18 - Tag, Nacht und Uhr", "Tag/Nacht: Tag (Sekunden)");
+            FromSeconds(NightMinutes, "18 - Tag, Nacht und Uhr", "Tag/Nacht: Nacht (Sekunden)");
 
             string sizes = Old("12 - Kisten", "Größe: Kistengrößen");
             if (sizes != null)

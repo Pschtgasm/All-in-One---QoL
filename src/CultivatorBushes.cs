@@ -146,3 +146,130 @@ namespace Pscht_QoL
         }
     }
 }
+
+namespace Pscht_QoL
+{
+    /// <summary>
+    /// Büsche, Pilze, Disteln aus der Kultivator-Liste wachsen nach dem Ernten nach – auch die, die schon
+    /// vor dem Mod-Start in der Welt geladen waren. Pilze und Disteln haben im Spiel kein "leeres" Aussehen:
+    /// sie bleiben als kleiner Stumpf stehen, bis sie nachgewachsen sind.
+    /// </summary>
+    internal static class BushRegrow
+    {
+        internal const float RespawnMinutes = 240f;
+        private const float StumpScale = 0.4f;   // deutlich kleiner als die volle Pflanze
+        private static readonly Color StumpColor = new Color(0.35f, 0.25f, 0.15f, 1f);   // braun-dunkel = abgeerntet
+
+        private static string _listFor;
+        private static readonly HashSet<string> _items = new HashSet<string>();
+        private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<Pickable, ScaleBox> _scale =
+            new System.Runtime.CompilerServices.ConditionalWeakTable<Pickable, ScaleBox>();
+        private class ScaleBox { public Transform Target; public Vector3 Scale; public bool Skip; }
+
+        internal static bool IsOurs(Pickable p)
+        {
+            if (p == null || p.m_itemPrefab == null || !Cfg.PlantsEnabled.Value || !Cfg.BushesEnabled.Value) return false;
+            if (p.GetComponent<Plant>() != null) return false;
+            string list = Cfg.BushItems.Value ?? "";
+            if (_listFor != list)
+            {
+                _listFor = list;
+                _items.Clear();
+                foreach (var s in list.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+                    if (s.Trim().Length > 0) _items.Add(s.Trim());
+            }
+            return _items.Contains(p.m_itemPrefab.name);
+        }
+
+        /// <summary>Kleiner Stumpf, solange geerntet (nur Pickables ohne eigenes "leeres" Modell).</summary>
+        internal static void UpdateStump(Pickable p)
+        {
+            if (p == null || p.m_respawnTimeMinutes <= 0f || !IsOurs(p)) return;
+            if (!_scale.TryGetValue(p, out var box))
+            {
+                box = new ScaleBox();
+                var hide = p.m_hideWhenPicked;
+                if (hide == null) box.Target = p.transform;
+                else
+                {
+                    // Pilze/Disteln: "beim Ernten verstecken" ist die ganze Pflanze -> sie wäre komplett weg.
+                    // Büsche: nur die Beeren werden versteckt, der Busch bleibt -> nichts tun.
+                    bool whole = true;
+                    foreach (var rend in p.GetComponentsInChildren<Renderer>(true))
+                        if (rend != null && !rend.transform.IsChildOf(hide.transform)) { whole = false; break; }
+                    box.Skip = !whole;
+                    box.Target = p.transform;   // ganze Pflanze verkleinern (sicher, egal wie das Modell aufgebaut ist)
+                }
+                box.Scale = box.Target.localScale;
+                _scale.Add(p, box);
+            }
+            if (box.Skip || box.Target == null) return;
+            bool picked = p.GetPicked();
+            if (p.m_hideWhenPicked != null && picked && p.GetEnabled != 0 && !p.m_hideWhenPicked.activeSelf)
+                p.m_hideWhenPicked.SetActive(true);   // als Stumpf sichtbar lassen
+            box.Target.localScale = picked ? box.Scale * StumpScale : box.Scale;
+            if (MaterialMan.instance != null)
+            {
+                if (picked) MaterialMan.instance.SetValue(box.Target.gameObject, ShaderProps._Color, StumpColor);
+                else MaterialMan.instance.ResetValue(box.Target.gameObject, ShaderProps._Color);
+            }
+        }
+
+        internal static bool IsStump(Pickable p) => _scale.TryGetValue(p, out var box) && !box.Skip;
+
+        /// <summary>Restzeit bis zum Nachwachsen als Text, z.B. "1 Std. 20 Min.".</summary>
+        internal static string Remaining(Pickable p)
+        {
+            var nview = Util.GetField(p, "m_nview") as ZNetView;
+            if (nview == null || !nview.IsValid() || ZNet.instance == null) return null;
+            long ticks = nview.GetZDO().GetLong(ZDOVars.s_pickedTime, 0L);
+            if (ticks <= 1) return null;
+            double left = p.m_respawnTimeMinutes - (ZNet.instance.GetTime() - new DateTime(ticks)).TotalMinutes;
+            if (left < 0) left = 0;
+            int h = (int)(left / 60), m = (int)Math.Ceiling(left % 60);
+            if (m == 60) { h++; m = 0; }
+            return h > 0 ? h + L.T(" Std. ", " h ") + m + L.T(" Min.", " min") : m + L.T(" Min.", " min");
+        }
+    }
+
+    [HarmonyLib.HarmonyPatch(typeof(Pickable), "Awake")]
+    internal static class Pickable_Awake_BushRegrow
+    {
+        // Vor Awake: sonst löscht Valheim bereits geerntete Pilze/Disteln ohne Nachwachszeit
+        private static void Prefix(Pickable __instance)
+        {
+            if (!BushRegrow.IsOurs(__instance)) return;
+            float set = Cfg.BushRegrowMinutes.Value;
+            if (set > 0f) __instance.m_respawnTimeMinutes = set;   // eigene Zeit aus der Konfig
+            else if (__instance.m_respawnTimeMinutes <= 0f) __instance.m_respawnTimeMinutes = BushRegrow.RespawnMinutes;
+        }
+
+        private static void Postfix(Pickable __instance) => BushRegrow.UpdateStump(__instance);
+    }
+
+    [HarmonyLib.HarmonyPatch(typeof(Pickable), "SetPicked")]
+    internal static class Pickable_SetPicked_BushRegrow
+    {
+        private static void Postfix(Pickable __instance, object[] __args)
+        {
+            BushRegrow.UpdateStump(__instance);
+            if (__args != null && __args.Length > 0 && __args[0] is bool picked && picked && BushRegrow.IsOurs(__instance))
+                Plugin.LogInfo("Büsche/Pilze: " + __instance.name + " geerntet, wächst nach in " + __instance.m_respawnTimeMinutes + " Min." +
+                               (BushRegrow.IsStump(__instance) ? " (Stumpf)" : ""));
+        }
+    }
+
+    /// <summary>Geerntete Büsche/Pilze zeigen beim Anschauen, wann sie wieder erntbar sind.</summary>
+    [HarmonyLib.HarmonyPatch(typeof(Pickable), "GetHoverText")]
+    internal static class Pickable_GetHoverText_Timer
+    {
+        private static void Postfix(Pickable __instance, ref string __result)
+        {
+            if (!string.IsNullOrEmpty(__result) || __instance.m_respawnTimeMinutes <= 0f || !__instance.GetPicked()) return;
+            if (__instance.GetEnabled == 0) return;
+            string left = BushRegrow.Remaining(__instance);
+            if (left == null) return;
+            __result = Localization.instance.Localize(__instance.GetHoverName()) + "\n" + L.T("Wächst nach in ", "Regrows in ") + left;
+        }
+    }
+}

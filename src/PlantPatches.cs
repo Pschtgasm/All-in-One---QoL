@@ -48,8 +48,8 @@ namespace Pscht_QoL
         private static void Postfix(Plant __instance)
         {
             if (!Cfg.PlantsEnabled.Value) return;
-            float sec = Cfg.PlantGrowSeconds.Value;
-            if (sec <= 0f) return;   // 0 = wie im normalen Spiel
+            float sec = Cfg.PlantGrowMinutes.Value * 60f;   // Konfig in Minuten, Valheim in Sekunden
+            if (sec <= 0f) return;
             __instance.m_growTime = sec;
             __instance.m_growTimeMax = sec;
         }

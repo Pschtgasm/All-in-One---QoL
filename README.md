@@ -1,4 +1,4 @@
-# Pscht - All in One QoL
+# All in One QoL
 
 *A Valheim mod by **Team Pscht** · ein Valheim-Mod von **Team Pscht***
 
@@ -40,9 +40,9 @@
 | Area | What it does (default) |
 |---|---|
 | **Taming** | Fast taming (5 s) · fast breeding and growing up · offspring can get +1 star · all tames can be commanded · **LAlt+F** all follow · **LAlt+G** all stay · **LAlt+H** call all to you · lost tames come back on their own (from 40 m) · tames follow through portals · tames are rescued instead of dying (not when killed by a player) · tame and wild animals eat from chests nearby |
-| **Planting** | Plant everything in every biome · growth time in seconds · **cultivator grid**: plant in a grid, size with Ctrl + arrow keys · plant **berry bushes, mushrooms and thistles** with the cultivator (5 each, they grow back after harvesting) |
+| **Planting** | Plant everything in every biome · growth time in minutes · **cultivator grid**: plant in a grid with visible lines, size with Ctrl + arrow keys or Ctrl/Alt + mouse wheel, rotate the whole grid with the mouse wheel, shows how many seeds you have and marks plants red you lack seeds for · plant **berry bushes, mushrooms and thistles** with the cultivator (5 each, they grow back after harvesting, hover shows the time left) |
 | **Craft from chests** | Crafting, building, smelting and buying use materials from chests nearby (50 m) |
-| **Player** | Carry weight · build distance · interaction distance · auto-pickup range |
+| **Player** | Carry weight · build distance · interaction distance · auto-pickup range · **bigger inventory** (up to 5 extra rows) |
 | **Items** | Stack size ×20 · weight ×0.5 · no movement penalty from gear · items float |
 | **Stations** | Seconds per item and capacity for smelter, blast furnace, kiln, spinning wheel, windmill, eitr refinery · fermenter and beehive time · fill **from chests**, **Shift + E** = fill to max · kiln only takes normal wood |
 | **Fires** | No fuel needed (campfires, braziers, all other fires – each on its own) · no smoke |
@@ -56,7 +56,7 @@
 | **Smart chests** | Items move to the chest that already holds the same item or group · hold **LAlt** = store normally |
 | **Timers** | Time left on plants, fermenter, beehive, taming, love, pregnancy, growing up |
 | **Day, night and clock** | Length of day and night · clock at the top with day number, Valheim time and real time |
-| **Extra slots** | **4 armor slots**, wishbone/wisp, **belt** (works in addition!), trinket, **3 food slots** (eat with **Ctrl+Y / X / C**), **shield slot** (shield is equipped with one-handed weapons) · **second hotbar** with 8 slots (**Alt+1 … Alt+8**) |
+| **Extra slots** | **4 armor slots**, wishbone/wisp, **belt** (works in addition!), trinket, **key slot** (swamp crypt key and other door keys), **3 food slots** (eat with **Ctrl+Y / X / C**), **shield slot** (shield is equipped with one-handed weapons) · **second hotbar** with 8 slots (**Alt+1 … Alt+8**) · after death everything goes back into its slots |
 | **Radar** | Dungeon entrances, villages, ruins, tar pits, runestones, shipwrecks, ores, bushes … as pins on the map · window with **F7** |
 | **Inventory helpers** | **Favorites**: middle-click an item – used items are refilled from chests nearby · **compare** weapons, shields and armor in the tooltip · keep weapons in hand at stations · **colored durability bar** |
 
@@ -74,7 +74,7 @@
 | hold **LAlt** | While storing: the item stays in the open chest |
 | **LAlt+F / G / H** | All tames follow / stay / come to you |
 | **Shift + E** | Fill a station to max |
-| **Ctrl + arrow keys** | Change the cultivator grid size |
+| **Ctrl + arrow keys**, **Ctrl/Alt + mouse wheel** | Change the cultivator grid size |
 | **F7** | Radar window |
 | **Alt+1 … Alt+8** | Use an item from the second hotbar |
 | **Ctrl+Y / X / C** | Eat from food slot 1 / 2 / 3 |
@@ -104,7 +104,7 @@ Marlthon-ValheimQol · xtavim-BetterTames · Alpus-BreedingTweaks · Advize-Plan
 
 ## Problems?
 
-`BepInEx\LogOutput.log` shows at start: `Pscht - All in One QoL 1.1.0 geladen (X Patches OK, Y fehlgeschlagen)`. If a patch fails, only that feature is off – everything else keeps working.
+`BepInEx\LogOutput.log` shows at start: `All in One QoL 1.1.0 geladen (X Patches OK, Y fehlgeschlagen)`. If a patch fails, only that feature is off – everything else keeps working.
 
 ## More from Team Pscht
 
@@ -127,9 +127,9 @@ Marlthon-ValheimQol · xtavim-BetterTames · Alpus-BreedingTweaks · Advize-Plan
 | Bereich | Was es macht (Standard) |
 |---|---|
 | **Zähmen** | Schnell zähmen (5 s) · schnelle Zucht und Wachstum · Nachwuchs kann +1 Stern bekommen · alle Tiere befehlbar · **LAlt+F** alle folgen · **LAlt+G** alle bleiben · **LAlt+H** alle herholen · verlorene Tiere kommen von selbst zurück (ab 40 m) · Tiere folgen durch Portale · Tiere werden gerettet statt zu sterben (nicht durch Spieler) · zahme und wilde Tiere fressen aus Kisten |
-| **Pflanzen** | Alles in jedem Biom pflanzen · Wachstumszeit in Sekunden · **Kultivator-Raster**: im Raster pflanzen, Größe mit Strg + Pfeiltasten · **Beerenbüsche, Pilze und Disteln** mit dem Kultivator pflanzen (je 5 Stück, wachsen nach dem Ernten nach) |
+| **Pflanzen** | Alles in jedem Biom pflanzen · Wachstumszeit in Minuten · **Kultivator-Raster**: im Raster mit sichtbaren Linien pflanzen, Größe mit Strg + Pfeiltasten oder Strg/Alt + Mausrad, ganzes Raster mit dem Mausrad drehen, zeigt deine Samen an und markiert Pflanzen rot, für die sie nicht reichen · **Beerenbüsche, Pilze und Disteln** mit dem Kultivator pflanzen (je 5 Stück, wachsen nach dem Ernten nach, beim Anschauen steht die Restzeit) |
 | **Aus Kisten herstellen** | Herstellen, Bauen, Schmelzen und Kaufen nehmen Material aus Kisten in der Nähe (50 m) |
-| **Spieler** | Tragkraft · Baudistanz · Interaktions-Reichweite · Aufsammel-Reichweite |
+| **Spieler** | Tragkraft · Baudistanz · Interaktions-Reichweite · Aufsammel-Reichweite · **größeres Inventar** (bis zu 5 Reihen mehr) |
 | **Items** | Stapel ×20 · Gewicht ×0,5 · keine Bewegungsstrafe durch Ausrüstung · Items schwimmen |
 | **Stationen** | Sekunden pro Stück und Kapazität für Schmelzofen, Hochofen, Köhlerei, Spinnrad, Windmühle, Eitr-Raffinerie · Zeit für Gärbottich und Bienenstock · befüllen **aus Kisten**, **Shift + E** = bis Max · Köhlerei nur mit normalem Holz |
 | **Feuer** | Kein Brennstoff nötig (Lagerfeuer, Kohlebecken, alle anderen Feuer – jeweils einzeln) · kein Rauch |
@@ -143,7 +143,7 @@ Marlthon-ValheimQol · xtavim-BetterTames · Alpus-BreedingTweaks · Advize-Plan
 | **Smarte Kisten** | Items wandern in die Kiste mit dem gleichen Item oder der gleichen Gruppe · **LAlt** halten = normal ablegen |
 | **Timer** | Restzeit bei Pflanzen, Gärbottich, Bienenstock, Zähmen, Liebe, Trächtigkeit, Erwachsen |
 | **Tag, Nacht und Uhr** | Länge von Tag und Nacht · Uhr oben mit Tag-Nummer, Valheim-Zeit und echter Uhrzeit |
-| **Extra-Slots** | **4 Rüstungsslots**, Wünschelrute/Irrlicht, **Gürtel** (wirkt zusätzlich!), Schmuck, **3 Essensslots** (essen mit **Strg+Y / X / C**), **Schild-Slot** (Schild wird bei Einhandwaffen angelegt) · **zweite Schnellleiste** mit 8 Slots (**Alt+1 … Alt+8**) |
+| **Extra-Slots** | **4 Rüstungsslots**, Wünschelrute/Irrlicht, **Gürtel** (wirkt zusätzlich!), Schmuck, **Schlüssel-Slot** (Krypta-Schlüssel aus dem Sumpf und andere Türschlüssel), **3 Essensslots** (essen mit **Strg+Y / X / C**), **Schild-Slot** (Schild wird bei Einhandwaffen angelegt) · **zweite Schnellleiste** mit 8 Slots (**Alt+1 … Alt+8**) · nach dem Tod kommt alles zurück in die Slots |
 | **Radar** | Dungeon-Eingänge, Dörfer, Ruinen, Teergruben, Runensteine, Schiffswracks, Erze, Büsche … als Pins auf der Karte · Fenster mit **F7** |
 | **Inventar-Hilfen** | **Favoriten**: Mausrad-Klick auf ein Item – Verbrauchtes wird aus Kisten aufgefüllt · **Vergleich** von Waffen, Schilden und Rüstung im Tooltip · Waffen an Stationen in der Hand behalten · **farbige Haltbarkeits-Leiste** |
 
@@ -161,7 +161,7 @@ Marlthon-ValheimQol · xtavim-BetterTames · Alpus-BreedingTweaks · Advize-Plan
 | **LAlt** halten | Beim Einlagern: Item bleibt in der offenen Kiste |
 | **LAlt+F / G / H** | Alle Tiere folgen / bleiben / herholen |
 | **Shift + E** | Station bis Max befüllen |
-| **Strg + Pfeiltasten** | Größe des Kultivator-Rasters |
+| **Strg + Pfeiltasten**, **Strg/Alt + Mausrad** | Größe des Kultivator-Rasters |
 | **F7** | Radar-Fenster |
 | **Alt+1 … Alt+8** | Item aus der zweiten Schnellleiste benutzen |
 | **Strg+Y / X / C** | Essen aus Essensslot 1 / 2 / 3 |
@@ -188,7 +188,7 @@ Diese Mods ausschalten, wenn du diesen Mod nutzt: siehe Liste oben unter *Replac
 
 ## Probleme?
 
-`BepInEx\LogOutput.log` zeigt beim Start: `Pscht - All in One QoL 1.1.0 geladen (X Patches OK, Y fehlgeschlagen)`. Fällt ein Patch aus, fehlt nur diese Funktion – der Rest läuft weiter.
+`BepInEx\LogOutput.log` zeigt beim Start: `All in One QoL 1.1.0 geladen (X Patches OK, Y fehlgeschlagen)`. Fällt ein Patch aus, fehlt nur diese Funktion – der Rest läuft weiter.
 
 ## Mehr von Team Pscht
 

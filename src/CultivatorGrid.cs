@@ -14,6 +14,14 @@ namespace Pscht_QoL
     {
         private static readonly List<GameObject> _ghosts = new List<GameObject>();
         private static string _ghostFor;
+        private static readonly List<bool> _ghostRed = new List<bool>();
+        private static readonly List<LineRenderer> _lines = new List<LineRenderer>();
+        private static Material _lineMat;
+        private static string _info;
+        private static bool _infoOk;
+        private static readonly Color LineOk = new Color(0.35f, 1f, 0.35f, 0.9f);
+        private static readonly Color LineRed = new Color(1f, 0.2f, 0.15f, 0.95f);
+        private static readonly Color LineGrey = new Color(0.6f, 0.6f, 0.6f, 0.45f);
         private static int _spaceMask;
 
         private static int SpaceMask
@@ -43,21 +51,38 @@ namespace Pscht_QoL
         private static float Spacing(Plant plant) =>
             Cfg.GridSpacing.Value > 0f ? Cfg.GridSpacing.Value : Mathf.Max(0.5f, plant.m_growRadius * 2f);
 
+        /// <summary>
+        /// Richtung des Rasters: vom Spieler weg (an den Himmelsrichtungen ausgerichtet), gedreht um die
+        /// eigene Raster-Drehung (Mausrad ohne Taste) – das ganze Raster dreht sich um die Hauptpflanze.
+        /// </summary>
+        private static void Axes(Player player, out Vector3 f, out Vector3 r)
+        {
+            Vector3 pf = player.transform.forward;
+            pf.y = 0f;
+            Vector3 snap = Mathf.Abs(pf.x) > Mathf.Abs(pf.z) ? new Vector3(Mathf.Sign(pf.x), 0f, 0f) : new Vector3(0f, 0f, Mathf.Sign(pf.z));
+            // Erst umschwenken, wenn der Blick deutlich (mehr als 70°) von der bisherigen Richtung abweicht –
+            // sonst springt das Raster beim Laufen an der 45°-Grenze ständig hin und her.
+            if (_dir == Vector3.zero || Vector3.Angle(pf, _dir) > 70f) _dir = snap;
+            f = _dir;
+            f = Quaternion.Euler(0f, GridYaw, 0f) * f;
+            f.y = 0f;
+            f.Normalize();
+            r = new Vector3(f.z, 0f, -f.x);
+        }
+
         /// <summary>Alle Rasterpunkte außer dem Hauptpunkt (dort steht die normale Vorschau).</summary>
-        private static IEnumerable<Vector3> Cells(Player player, Vector3 origin, Plant plant)
+        private static IEnumerable<Vector3> Cells(Player player, Vector3 origin, Plant plant, bool withMain = false)
         {
             int w = Mathf.Max(1, Cfg.GridWidth.Value), l = Mathf.Max(1, Cfg.GridLength.Value);
             float sp = Spacing(plant);
 
-            Vector3 f = player.transform.forward;
-            f = Mathf.Abs(f.x) > Mathf.Abs(f.z) ? new Vector3(Mathf.Sign(f.x), 0f, 0f) : new Vector3(0f, 0f, Mathf.Sign(f.z));
-            Vector3 r = new Vector3(f.z, 0f, -f.x);
+            Axes(player, out Vector3 f, out Vector3 r);
             int c0 = (w - 1) / 2;
 
             for (int row = 0; row < l; row++)
                 for (int col = 0; col < w; col++)
                 {
-                    if (row == 0 && col == c0) continue;
+                    if (row == 0 && col == c0 && !withMain) continue;
                     Vector3 p = origin + f * (row * sp) + r * ((col - c0) * sp);
                     if (ZoneSystem.instance != null) p.y = ZoneSystem.instance.GetGroundHeight(p);
                     yield return p;
@@ -102,6 +127,24 @@ namespace Pscht_QoL
             Plugin.LogInfo("Raster " + piece.name + ": Wuchsradius " + plant.m_growRadius.ToString("0.##") +
                            " m, Abstand " + Spacing(plant).ToString("0.##") + " m, frei " + ok + "/" + total + sb);
         }
+
+        /// <summary>Für wie viele Pflanzen das Material reicht (kleinster Wert über alle Rohstoffe).</summary>
+        private static int AvailableSets(Player player, Piece piece)
+        {
+            var inv = player.GetInventory();
+            if (inv == null) return 0;
+            int sets = int.MaxValue;
+            foreach (var req in piece.m_resources)
+            {
+                if (req == null || !req.m_resItem || req.m_amount <= 0) continue;
+                sets = Mathf.Min(sets, inv.CountItems(req.m_resItem.m_itemData.m_shared.m_name) / req.m_amount);
+            }
+            return sets == int.MaxValue ? 9999 : sets;
+        }
+
+        private static bool FreeBuild(Player player, Piece piece) =>
+            player.PlacementCostDisabled
+            || (ZoneSystem.instance != null && ZoneSystem.instance.GetGlobalKey(piece.FreeBuildKey()));
 
         private static bool HaveMaterial(Player player, Piece piece, int count)
         {
@@ -167,7 +210,10 @@ namespace Pscht_QoL
         {
             foreach (var g in _ghosts) if (g) Object.Destroy(g);
             _ghosts.Clear();
+            _ghostRed.Clear();
             _ghostFor = null;
+            ClearLines();
+            _info = null;
         }
 
         internal static void UpdateGhosts(Player player, GameObject ghost)
@@ -187,17 +233,160 @@ namespace Pscht_QoL
             }
             if (_ghostFor != ghost.name || _ghosts.Count != cells.Count) Clear();
 
-            while (_ghosts.Count < cells.Count) _ghosts.Add(MakeVisualCopy(ghost));
+            while (_ghosts.Count < cells.Count) { _ghosts.Add(MakeVisualCopy(ghost)); _ghostRed.Add(false); }
             _ghostFor = ghost.name;
 
+            bool free = FreeBuild(player, piece);
+            int sets = free ? int.MaxValue : AvailableSets(player, piece);
+            var state = new List<int>(cells.Count);   // 0 = pflanzbar, 1 = zu wenig Samen, 2 = belegt
+            int okCount = 0;
             for (int i = 0; i < cells.Count; i++)
             {
                 var g = _ghosts[i];
-                if (!g) continue;
                 bool ok = CanPlant(piece, plant, cells[i]);
+                // Hauptpflanze braucht 1 Satz, die k-te Rasterpflanze (ab 0) braucht k+2
+                bool enough = ok && (free || sets >= okCount + 2);
+                if (ok) okCount++;
+                state.Add(!ok ? 2 : enough ? 0 : 1);
+                if (!g) continue;
                 g.SetActive(ok);
-                if (ok) g.transform.SetPositionAndRotation(cells[i], ghost.transform.rotation);
+                if (!ok) continue;
+                g.transform.SetPositionAndRotation(cells[i], ghost.transform.rotation);
+                bool red = !enough && Cfg.GridSeedInfo.Value;
+                if (_ghostRed[i] != red) { SetRed(g, red); _ghostRed[i] = red; }
             }
+
+            UpdateLines(player, ghost.transform.position, plant, state, free || sets >= 1);
+            UpdateInfo(piece, free, okCount + 1);
+        }
+
+        private static void SetRed(GameObject g, bool red)
+        {
+            if (MaterialMan.instance == null) return;
+            if (red)
+            {
+                MaterialMan.instance.SetValue(g, ShaderProps._Color, Color.red);
+                MaterialMan.instance.SetValue(g, ShaderProps._EmissionColor, Color.red * 0.7f);
+            }
+            else
+            {
+                MaterialMan.instance.ResetValue(g, ShaderProps._Color);
+                MaterialMan.instance.ResetValue(g, ShaderProps._EmissionColor);
+            }
+        }
+
+        // ---------------- Rasterlinien ----------------
+
+        private static void ClearLines()
+        {
+            foreach (var l in _lines) if (l) Object.Destroy(l.gameObject);
+            _lines.Clear();
+        }
+
+        private static LineRenderer NewLine()
+        {
+            if (_lineMat == null)
+            {
+                var sh = Shader.Find("Sprites/Default");
+                if (sh == null) sh = Shader.Find("Legacy Shaders/Particles/Alpha Blended");
+                if (sh == null) sh = Shader.Find("Unlit/Color");
+                _lineMat = new Material(sh);
+            }
+            var go = new GameObject("PschtGridLine");
+            var lr = go.AddComponent<LineRenderer>();
+            lr.sharedMaterial = _lineMat;
+            lr.useWorldSpace = true;
+            lr.loop = true;
+            lr.widthMultiplier = 0.04f;
+            lr.numCornerVertices = 0;
+            lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            lr.receiveShadows = false;
+            return lr;
+        }
+
+        /// <summary>Ein Quadrat pro Rasterplatz, folgt dem Boden. Farbe nach Zustand.</summary>
+        private static void UpdateLines(Player player, Vector3 origin, Plant plant, List<int> state, bool mainOk)
+        {
+            if (!Cfg.GridLines.Value) { if (_lines.Count > 0) ClearLines(); return; }
+            var all = new List<Vector3>(Cells(player, origin, plant, true));
+            while (_lines.Count < all.Count) _lines.Add(NewLine());
+            while (_lines.Count > all.Count)
+            {
+                var l = _lines[_lines.Count - 1];
+                if (l) Object.Destroy(l.gameObject);
+                _lines.RemoveAt(_lines.Count - 1);
+            }
+
+            float half = Spacing(plant) * 0.5f * 0.92f;
+            Axes(player, out Vector3 f, out Vector3 r);
+            int c0 = (Mathf.Max(1, Cfg.GridWidth.Value) - 1) / 2;
+            const int seg = 4;
+            var pts = new Vector3[seg * 4];
+
+            for (int i = 0, k = 0; i < all.Count; i++)
+            {
+                // Hauptpunkt ist in "all" die Zelle c0 der ersten Reihe, in "state" fehlt er
+                bool isMain = i == c0;
+                int st = isMain ? (mainOk ? 0 : 1) : (k < state.Count ? state[k++] : 2);
+                var lr = _lines[i];
+                if (!lr) continue;
+                Color col = st == 0 ? LineOk : st == 1 ? LineRed : LineGrey;
+                lr.startColor = col;
+                lr.endColor = col;
+
+                Vector3 c = all[i];
+                Vector3[] corners = { c - f * half - r * half, c - f * half + r * half, c + f * half + r * half, c + f * half - r * half };
+                for (int e = 0; e < 4; e++)
+                    for (int s = 0; s < seg; s++)
+                    {
+                        Vector3 p = Vector3.Lerp(corners[e], corners[(e + 1) % 4], s / (float)seg);
+                        if (ZoneSystem.instance != null) p.y = ZoneSystem.instance.GetGroundHeight(p);
+                        p.y += 0.06f;
+                        pts[e * seg + s] = p;
+                    }
+                lr.positionCount = pts.Length;
+                lr.SetPositions(pts);
+            }
+        }
+
+        // ---------------- Samen-Anzeige ----------------
+
+        private static void UpdateInfo(Piece piece, bool free, int plants)
+        {
+            _info = null;
+            if (!Cfg.GridSeedInfo.Value || free) return;
+            var inv = Player.m_localPlayer != null ? Player.m_localPlayer.GetInventory() : null;
+            if (inv == null) return;
+            var sb = new System.Text.StringBuilder();
+            _infoOk = true;
+            foreach (var req in piece.m_resources)
+            {
+                if (req == null || !req.m_resItem || req.m_amount <= 0) continue;
+                string n = req.m_resItem.m_itemData.m_shared.m_name;
+                int have = inv.CountItems(n), need = req.m_amount * plants;
+                if (have < need) _infoOk = false;
+                if (sb.Length > 0) sb.Append("   ");
+                string name = Localization.instance != null ? Localization.instance.Localize(n) : n;
+                sb.Append(name).Append(": ").Append(have).Append(" / ").Append(need);
+            }
+            if (sb.Length == 0) return;
+            if (!_infoOk) sb.Append(L.T("  – zu wenig!", "  – not enough!"));
+            _info = sb.ToString();
+        }
+
+        private static GUIStyle _style;
+
+        internal static void OnGUI()
+        {
+            if (_info == null || _ghosts.Count == 0 || Player.m_localPlayer == null || !Player.m_localPlayer.InPlaceMode()) return;
+            if (_style == null)
+                _style = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold };
+            _style.fontSize = Mathf.RoundToInt(Screen.height / 40f);
+            var rect = new Rect(0, Screen.height * 0.70f, Screen.width, Screen.height * 0.05f);
+            _style.normal.textColor = Color.black;
+            GUI.Label(new Rect(rect.x + 2, rect.y + 2, rect.width, rect.height), _info, _style);
+            _style.normal.textColor = _infoOk ? new Color(0.6f, 1f, 0.6f) : new Color(1f, 0.4f, 0.35f);
+            GUI.Label(rect, _info, _style);
         }
 
         // ---------------- Pflanzen ----------------
@@ -234,6 +423,23 @@ namespace Pscht_QoL
 
         // ---------------- Tasten ----------------
 
+        /// <summary>Eigene Drehung des Rasters (Mausrad ohne Taste), startet bei 0.</summary>
+        internal static float GridYaw;
+        private static Vector3 _dir;   // aktuelle Himmelsrichtung des Rasters
+
+        private static bool WheelHeld(KeyCode k) => k != KeyCode.None && Input.GetKey(k);
+
+        /// <summary>Hält der Spieler eine Mausrad-Taste fürs Raster (und hat eine Rasterpflanze in der Vorschau)?</summary>
+        internal static bool WheelModifierActive(Player player)
+        {
+            if (!Active || player == null) return false;
+            var ghost = Util.GetField(player, "m_placementGhost") as GameObject;
+            if (!ghost || GridPlant(ghost.GetComponent<Piece>()) == null) return false;
+            // mit Taste: Größe ändern; ohne Taste bei mehr als einem Feld: ganzes Raster drehen
+            return WheelHeld(Cfg.GridWheelWidthKey.Value) || WheelHeld(Cfg.GridWheelLengthKey.Value)
+                   || Cfg.GridWidth.Value * Cfg.GridLength.Value > 1;
+        }
+
         internal static void Tick()
         {
             var player = Player.m_localPlayer;
@@ -250,6 +456,15 @@ namespace Pscht_QoL
             if (Cfg.GridNarrowerKey.Value.IsDown()) w--;
             if (Cfg.GridLongerKey.Value.IsDown()) l++;
             if (Cfg.GridShorterKey.Value.IsDown()) l--;
+            // Mausrad: Strg = Breite, Alt = Länge (das Drehen der Pflanze wird dann unterdrückt)
+            float wheel = ZInput.GetMouseScrollWheel();
+            if (wheel != 0f)
+            {
+                int step = wheel > 0f ? 1 : -1;
+                if (WheelHeld(Cfg.GridWheelWidthKey.Value)) w += step;
+                else if (WheelHeld(Cfg.GridWheelLengthKey.Value)) l += step;
+                else if (w * l > 1) GridYaw = Mathf.Repeat(GridYaw + step * 22.5f, 360f);   // ganzes Raster drehen
+            }
             w = Mathf.Clamp(w, 1, 10);
             l = Mathf.Clamp(l, 1, 10);
             if (w == Cfg.GridWidth.Value && l == Cfg.GridLength.Value) return;
@@ -267,6 +482,23 @@ namespace Pscht_QoL
         {
             if (__instance != Player.m_localPlayer) return;
             CultivatorGrid.UpdateGhosts(__instance, Util.GetField(__instance, "m_placementGhost") as GameObject);
+        }
+    }
+
+    /// <summary>Mit gehaltener Raster-Taste dreht das Mausrad nicht die Pflanze, sondern ändert das Raster.</summary>
+    [HarmonyPatch(typeof(Player), "UpdatePlacement")]
+    internal static class Player_UpdatePlacement_GridWheel
+    {
+        private static void Prefix(Player __instance, out int __state)
+        {
+            __state = int.MinValue;
+            if (__instance != Player.m_localPlayer || !CultivatorGrid.WheelModifierActive(__instance)) return;
+            if (Util.GetField(__instance, "m_placeRotation") is int r) __state = r;
+        }
+
+        private static void Postfix(Player __instance, int __state)
+        {
+            if (__state != int.MinValue) Util.SetField(__instance, "m_placeRotation", __state);
         }
     }
 

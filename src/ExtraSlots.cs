@@ -34,12 +34,13 @@ namespace Pscht_QoL
         internal const int TrinketX = 0;   // Reihe 1, Feld 1: Schmuckstück (Trinket)
         internal const int BeltX = 1;      // Reihe 1, Feld 2: Gürtel (wirkt zusätzlich, Mod schaltet die Wirkung ein)
         internal const int ShieldX = 2;    // Reihe 1, Feld 3: Schild (wird bei Einhandwaffen automatisch angelegt)
+        internal const int KeyX = 3;       // Reihe 1, Feld 4: Schlüssel (Krypta-Schlüssel usw.)
         internal const int QuickRow = 2;   // Extra-Reihe 3: zweite Schnellleiste (x = 0..7, Alt+1..8)
         internal const int QuickCount = 8;
         internal const int ExtraRows = 3;
         internal static string[] ArmorNames => L.De ? new[] { "Helm", "Brust", "Beine", "Umhang" } : new[] { "Helmet", "Chest", "Legs", "Cape" };
 
-        internal enum Kind { None, Armor, Food, Utility, Trinket, Belt, Quick, Shield }
+        internal enum Kind { None, Armor, Food, Utility, Trinket, Belt, Quick, Shield, Key }
 
         private static float _nextCheck;
 
@@ -49,7 +50,8 @@ namespace Pscht_QoL
         internal static bool BeltOn => Cfg.BeltSlotEnabled.Value;
         internal static bool QuickOn => Cfg.Hotbar2Enabled.Value;
         internal static bool ShieldOn => Cfg.ShieldSlotEnabled.Value;
-        internal static bool AnyEnabled => ArmorOn || FoodOn || UtilOn || BeltOn || QuickOn || ShieldOn;
+        internal static bool KeyOn => Cfg.KeySlotEnabled.Value;
+        internal static bool AnyEnabled => ArmorOn || FoodOn || UtilOn || BeltOn || QuickOn || ShieldOn || KeyOn;
 
         /// <summary>Gürtel (Megingiard): Prefab "BeltStrength" oder ein Hilfsmittel, das Tragkraft gibt.</summary>
         internal static bool IsBelt(ItemDrop.ItemData item)
@@ -57,6 +59,31 @@ namespace Pscht_QoL
             if (item?.m_shared == null || TypeOf(item) != "Utility") return false;
             if (item.m_dropPrefab != null && item.m_dropPrefab.name == "BeltStrength") return true;
             return item.m_shared.m_equipStatusEffect is SE_Stats st && st.m_addMaxCarryWeight > 0f;
+        }
+
+        private static HashSet<string> _keys;
+        private static ZNetScene _keysFor;
+
+        /// <summary>Schlüssel = jedes Item, das irgendeine Tür als Schlüssel braucht (auch aus anderen Mods).</summary>
+        internal static bool IsKey(ItemDrop.ItemData item)
+        {
+            if (item?.m_shared == null) return false;
+            var scene = ZNetScene.instance;
+            if (_keys == null || (scene != null && _keysFor != scene))
+            {
+                _keys = new HashSet<string> { "$item_cryptkey" };
+                _keysFor = scene;
+                if (scene != null)
+                    foreach (var go in scene.m_prefabs)
+                    {
+                        if (!go) continue;
+                        foreach (var door in go.GetComponentsInChildren<Door>(true))
+                            if (door != null && door.m_keyItem != null && door.m_keyItem.m_itemData?.m_shared != null)
+                                _keys.Add(door.m_keyItem.m_itemData.m_shared.m_name);
+                    }
+                Plugin.LogInfo("Extra-Slots: Schlüssel erkannt: " + string.Join(", ", _keys));
+            }
+            return _keys.Contains(item.m_shared.m_name);
         }
 
         /// <summary>Welche Art Slot liegt an x in Extra-Reihe dy (0 = erste Extra-Reihe)?</summary>
@@ -71,12 +98,13 @@ namespace Pscht_QoL
             if (dy == 1 && x == TrinketX) return Kind.Trinket;
             if (dy == 1 && x == BeltX) return Kind.Belt;
             if (dy == 1 && x == ShieldX) return Kind.Shield;
+            if (dy == 1 && x == KeyX) return Kind.Key;
             if (dy == QuickRow && x < QuickCount) return Kind.Quick;
             return Kind.None;
         }
 
         internal static bool KindOn(Kind k) =>
-            k == Kind.Armor ? ArmorOn : k == Kind.Food ? FoodOn : k == Kind.Belt ? BeltOn : k == Kind.Quick ? QuickOn : k == Kind.Shield ? ShieldOn :
+            k == Kind.Armor ? ArmorOn : k == Kind.Food ? FoodOn : k == Kind.Belt ? BeltOn : k == Kind.Quick ? QuickOn : k == Kind.Shield ? ShieldOn : k == Kind.Key ? KeyOn :
             (k == Kind.Utility || k == Kind.Trinket) && UtilOn;
 
         private static string TypeOf(ItemDrop.ItemData item) =>
@@ -94,6 +122,7 @@ namespace Pscht_QoL
                 case Kind.Belt: return IsBelt(item);
                 case Kind.Quick: return true;   // Schnellleiste: alles erlaubt
                 case Kind.Shield: return TypeOf(item) == "Shield";
+                case Kind.Key: return IsKey(item);
             }
             return false;
         }
@@ -130,8 +159,54 @@ namespace Pscht_QoL
         internal static void OnSetHeight(Inventory inv, ref int height)
         {
             if (inv == null || !Extended.TryGetValue(inv, out var info)) return;
+            int old = info.BaseHeight;
             info.BaseHeight = height;
+            if (old != height) ShiftRows(inv, old, height);
             height += ExtraRows;
+        }
+
+        /// <summary>
+        /// Normale Reihenzahl hat sich geändert (größeres Inventar, beim Händler gekauft): Extra-Slots wandern mit.
+        /// Items aus weggefallenen normalen Reihen kommen auf freie Plätze, sonst fallen sie auf den Boden.
+        /// </summary>
+        private static void ShiftRows(Inventory inv, int oldBase, int newBase)
+        {
+            var extras = new List<ItemDrop.ItemData>();
+            var overflow = new List<ItemDrop.ItemData>();
+            foreach (var it in inv.GetAllItems())
+            {
+                if (it == null) continue;
+                if (it.m_gridPos.y >= oldBase) extras.Add(it);
+                else if (it.m_gridPos.y >= newBase) overflow.Add(it);
+            }
+            foreach (var it in extras) it.m_gridPos = new Vector2i(it.m_gridPos.x, it.m_gridPos.y - oldBase + newBase);
+            foreach (var it in overflow) it.m_gridPos = new Vector2i(-1, -1);
+            foreach (var it in overflow)
+            {
+                var free = FindFreeNormal(inv);
+                if (free.x >= 0) it.m_gridPos = free;   // sonst bleibt (-1,-1): Valheim wirft es auf den Boden
+            }
+            if (extras.Count > 0 || overflow.Count > 0)
+                Plugin.LogInfo("Extra-Slots: Inventar " + oldBase + " -> " + newBase + " Reihen, " + extras.Count + " Slot-Items verschoben");
+        }
+
+        private const string BaseKey = "aioqol_base";
+
+        /// <summary>Nach dem Laden: Mit welcher Reihenzahl wurden die Items gespeichert? Dann passt das Verschieben.</summary>
+        internal static void SetLayoutBase(Player p, Inventory inv)
+        {
+            if (inv == null || !Extended.TryGetValue(inv, out var info)) return;
+            int saved = p.m_customData.TryGetValue(BaseKey, out var s) && int.TryParse(s, out int v) ? v : InventorySize.VanillaRows(p);
+            saved = Mathf.Clamp(saved, 1, InventorySize.MaxRows);
+            info.BaseHeight = saved;
+            Util.SetField(inv, "m_height", saved + ExtraRows);
+        }
+
+        /// <summary>Beim Speichern: aktuelle Reihenzahl merken.</summary>
+        internal static void SaveLayoutBase(Player p)
+        {
+            int b = BaseHeight(p.GetInventory());
+            if (b > 0) p.m_customData[BaseKey] = b.ToString();
         }
 
         /// <summary>Normale Höhe (ohne Extra-Reihe) oder -1, wenn das Inventar nicht erweitert ist.</summary>
@@ -228,7 +303,7 @@ namespace Pscht_QoL
             int b = BaseHeight(inv);
             if (b < 0) return;
 
-            bool changed = false;
+            bool changed = RestoreSlots(p, inv, b);
             foreach (var item in new List<ItemDrop.ItemData>(inv.GetAllItems()))
             {
                 if (item == null) continue;
@@ -246,6 +321,12 @@ namespace Pscht_QoL
                             changed = true;
                         }
                     }
+                    // Schlüssel wandert von selbst in den leeren Schlüssel-Slot
+                    else if (KeyOn && IsKey(item) && inv.GetItemAt(KeyX, b + 1) == null)
+                    {
+                        item.m_gridPos = new Vector2i(KeyX, b + 1);
+                        changed = true;
+                    }
                     continue;
                 }
 
@@ -253,7 +334,7 @@ namespace Pscht_QoL
                 var kind = KindAt(x, item.m_gridPos.y - b);
                 bool ok = kind != Kind.None && KindOn(kind) && Fits(item, kind, x);
                 // In einen Ausrüstungs-Slot gezogen = anlegen (Gürtel: Wirkung macht BeltSlot.Tick)
-                if (ok && kind != Kind.Food && kind != Kind.Belt && kind != Kind.Quick && kind != Kind.Shield && !item.m_equipped) p.EquipItem(item);
+                if (ok && kind != Kind.Food && kind != Kind.Belt && kind != Kind.Quick && kind != Kind.Shield && kind != Kind.Key && !item.m_equipped) p.EquipItem(item);
                 // Schild in den Schild-Slot gelegt, während eine Einhandwaffe in der Hand ist: gleich anlegen
                 if (ok && kind == Kind.Shield && !item.m_equipped && p.LeftItem == null && p.RightItem != null)
                     AutoShield(p, p.RightItem);
@@ -273,10 +354,65 @@ namespace Pscht_QoL
             if (changed) Changed(inv);
         }
 
-        /// <summary>Nach dem Laden mit ausgeschalteten Slots: Items aus der alten Extra-Reihe zurück ins Inventar.</summary>
-        internal static void RescueItems(Inventory inv)
+        // ---------- Nach dem Tod: zurück in die Slots ----------
+
+        private const string MemKey = "aioqol_slotmem";
+
+        private static string ItemId(ItemDrop.ItemData it) => it.m_shared.m_name + "|" + it.m_quality + "|" + it.m_variant;
+
+        [HarmonyPatch(typeof(Player), "Save")]
+    internal static class Player_Save_ExtraSlots
+    {
+        private static void Prefix(Player __instance) => ExtraSlots.SaveLayoutBase(__instance);
+    }
+
+    /// <summary>Vor dem Grabstein: merken, welches Item in welchem Extra-Slot lag (im Spielstand gespeichert).</summary>
+        internal static void RememberSlots(Player p, Inventory inv, int b)
         {
-            int h = inv.GetHeight(), w = inv.GetWidth();
+            if (!Cfg.SlotsAfterDeath.Value) return;
+            var parts = new List<string>();
+            foreach (var it in inv.GetAllItems())
+            {
+                if (it?.m_shared == null || it.m_gridPos.y < b) continue;
+                parts.Add(ItemId(it) + "|" + it.m_gridPos.x + "|" + (it.m_gridPos.y - b));
+            }
+            if (parts.Count == 0) return;
+            p.m_customData[MemKey] = string.Join(";", parts);
+            Plugin.LogInfo("Extra-Slots: " + parts.Count + " Slot-Plätze für den Grabstein gemerkt");
+        }
+
+        /// <summary>Items aus dem Grabstein wieder in ihre gemerkten Slots legen.</summary>
+        private static bool RestoreSlots(Player p, Inventory inv, int b)
+        {
+            if (!Cfg.SlotsAfterDeath.Value || !p.m_customData.TryGetValue(MemKey, out var mem) || string.IsNullOrEmpty(mem)) return false;
+            var entries = new List<string>(mem.Split(';'));
+            bool changed = false;
+            for (int i = entries.Count - 1; i >= 0; i--)
+            {
+                var f = entries[i].Split('|');
+                if (f.Length < 5 || !int.TryParse(f[3], out int x) || !int.TryParse(f[4], out int dy)) { entries.RemoveAt(i); continue; }
+                var kind = KindAt(x, dy);
+                if (kind == Kind.None || !KindOn(kind)) { entries.RemoveAt(i); continue; }
+                if (inv.GetItemAt(x, b + dy) != null) continue;   // Slot schon belegt: später nochmal
+                string id = f[0] + "|" + f[1] + "|" + f[2];
+                foreach (var it in inv.GetAllItems())
+                {
+                    if (it?.m_shared == null || it.m_gridPos.y >= b || ItemId(it) != id || !Fits(it, kind, x)) continue;
+                    it.m_gridPos = new Vector2i(x, b + dy);
+                    entries.RemoveAt(i);
+                    changed = true;
+                    break;
+                }
+            }
+            if (entries.Count == 0) p.m_customData.Remove(MemKey);
+            else p.m_customData[MemKey] = string.Join(";", entries);
+            return changed;
+        }
+
+        /// <summary>Nach dem Laden mit ausgeschalteten Slots: Items aus der alten Extra-Reihe zurück ins Inventar.</summary>
+        internal static void RescueItems(Inventory inv, int minRows = 0)
+        {
+            int h = Mathf.Max(inv.GetHeight(), minRows), w = inv.GetWidth();
             bool changed = false;
             foreach (var item in new List<ItemDrop.ItemData>(inv.GetAllItems()))
             {
@@ -417,7 +553,7 @@ namespace Pscht_QoL
         // Drei Spalten: links Rüstung, Mitte Rute/Irrlicht + Gürtel + Schmuck, rechts Essen.
         // Ausgeschaltete Spalten fallen weg, die anderen rücken nach links.
         private static int ArmorColCount() => ArmorOn ? ArmorCount : 0;
-        private static int MidColCount() => (UtilOn ? 2 : 0) + (BeltOn ? 1 : 0);
+        private static int MidColCount() => (UtilOn ? 2 : 0) + (BeltOn ? 1 : 0) + (KeyOn ? 1 : 0);
         private static int FoodColCount() => (FoodOn ? FoodCount : 0) + (ShieldOn ? 1 : 0);
         private static int MidCol() => ArmorColCount() > 0 ? 1 : 0;
         private static int FoodCol() => MidCol() + (MidColCount() > 0 ? 1 : 0);
@@ -561,7 +697,8 @@ namespace Pscht_QoL
                     int r = 0;
                     int utilRow = r; if (UtilOn) r++;
                     int beltRow = r; if (BeltOn) r++;
-                    int trinketRow = r;
+                    int trinketRow = r; if (UtilOn) r++;
+                    int keyRow = r;
                     int mid = MidCol();
                     switch (kind)
                     {
@@ -569,6 +706,7 @@ namespace Pscht_QoL
                         case Kind.Utility: col = mid; row = utilRow; break;
                         case Kind.Belt: col = mid; row = beltRow; break;
                         case Kind.Trinket: col = mid; row = trinketRow; break;
+                        case Kind.Key: col = mid; row = keyRow; break;
                         case Kind.Quick: col = x; row = 0; top = QuickTop(space); break;
                         case Kind.Shield: col = FoodCol(); row = FoodOn ? FoodCount : 0; break;
                         default: col = FoodCol(); row = x - FoodStart; break;
@@ -650,7 +788,7 @@ namespace Pscht_QoL
                 {
                     string name = kind == Kind.Armor ? ArmorNames[x]
                                 : kind == Kind.Utility ? L.T("Rute /\nIrrlicht", "Wishbone /\nWisp")
-                                : kind == Kind.Belt ? L.T("Gürtel", "Belt") : kind == Kind.Shield ? L.T("Schild", "Shield") : L.T("Schmuck", "Trinket");
+                                : kind == Kind.Belt ? L.T("Gürtel", "Belt") : kind == Kind.Shield ? L.T("Schild", "Shield") : kind == Kind.Key ? L.T("Schlüssel", "Key") : L.T("Schmuck", "Trinket");
                     if (labelText != null) labelText.text = name;
                     show = show && inv.GetItemAt(x, pos.y) == null;   // Name nur im leeren Slot
                 }
@@ -689,7 +827,8 @@ namespace Pscht_QoL
         private static void Postfix(Player __instance)
         {
             var inv = __instance.GetInventory();
-            if (!ExtraSlots.AnyEnabled) { ExtraSlots.RescueItems(inv); return; }
+            if (!ExtraSlots.AnyEnabled) { ExtraSlots.RescueItems(inv, Mathf.Min(InventorySize.MaxRows, InventorySize.VanillaRows(__instance) + InventorySize.Extra)); return; }
+            ExtraSlots.SetLayoutBase(__instance, inv);
             foreach (var item in new List<ItemDrop.ItemData>(inv.GetAllItems()))
                 if (item != null && item.m_equipped) ExtraSlots.PlaceEquipped(__instance, item);
         }
@@ -704,6 +843,7 @@ namespace Pscht_QoL
             var inv = __instance.GetInventory();
             int b = ExtraSlots.BaseHeight(inv);
             if (b < 0) return;
+            ExtraSlots.RememberSlots(__instance, inv, b);
             bool changed = false;
             foreach (var item in new List<ItemDrop.ItemData>(inv.GetAllItems()))
             {
