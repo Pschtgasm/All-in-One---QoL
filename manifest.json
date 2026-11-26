@@ -1,0 +1,10 @@
+{
+  "name": "AllInOne_QoL",
+  "version_number": "1.0.0",
+  "website_url": "https://github.com/Pschtgasm/All-in-One---QoL",
+  "description": "All in One QoL by Pscht: taming, planting anywhere, craft from chests, smart chests, extra slots, second hotbar, portal names, station tweaks, clock, own skills and more. Everything configurable, with server sync.",
+  "dependencies": [
+    "denikson-BepInExPack_Valheim-5.4.2350",
+    "ValheimModding-Jotunn-2.30.2"
+  ]
+}

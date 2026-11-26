@@ -1,0 +1,18 @@
+bin/
+obj/
+dist/
+backup/
+icon_varianten/
+Claude outputs/
+*.user
+.vs/
+*.xlsx
+CLAUDE.md
+README_INTERN.md
+CHANGELOG_ENTWICKLUNG.md
+BUILD_LIES_MICH.txt
+icon_alt.png
+icon_frost.png
+frost_icon.ps1
+frost_icon2.ps1
+make_icon.ps1
