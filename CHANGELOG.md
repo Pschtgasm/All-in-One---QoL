@@ -3,6 +3,7 @@
 ## 1.1.0
 - New icon (Team Pscht, Deep North style).
 - README: Team Pscht branding, links to other Team Pscht mods, support section with bug report and idea forms on GitHub.
+- Cultivator: thistles can be planted too (5 thistles), bushes grow back after harvesting. Fix: bushes/mushrooms no longer disappear from the cultivator when another mod (e.g. More Vanilla Build Prefabs) disables them.
 
 ## 1.0.0
 - First public release. All-in-one quality of life for Valheim, every feature can be switched on/off in the config (sections 00–22), with server sync.

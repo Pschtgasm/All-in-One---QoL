@@ -14,13 +14,16 @@ namespace Pscht_QoL
     internal static class CultivatorBushes
     {
         private static ZNetScene _doneFor;
+        private static readonly List<GameObject> _mine = new List<GameObject>();
+        private static float _nextCheck;
 
         internal static void Tick()
         {
             if (!Cfg.PlantsEnabled.Value || !Cfg.BushesEnabled.Value) return;
             var player = Player.m_localPlayer;
             var scene = ZNetScene.instance;
-            if (player == null || scene == null || ObjectDB.instance == null || _doneFor == scene) return;
+            if (player == null || scene == null || ObjectDB.instance == null) return;
+            if (_doneFor == scene) { Recheck(player); return; }
             _doneFor = scene;
 
             try { Register(player, scene); }
@@ -93,14 +96,53 @@ namespace Pscht_QoL
                 piece.m_canBeRemoved = false;           // wilde Büsche nicht mit dem Hammer abreißbar
                 piece.m_onlyInBiome = Heightmap.Biome.None;
                 piece.m_cultivatedGroundOnly = false;
+                piece.m_enabled = true;                  // andere Mods (z.B. More Vanilla Build Prefabs) schalten es sonst ab
+
+                // immer wieder ernten: nachwachsen lassen, falls das Original das nicht tut
+                if (pick.m_respawnTimeMinutes <= 0f) pick.m_respawnTimeMinutes = 240f;
 
                 if (!table.m_pieces.Contains(prefab)) table.m_pieces.Add(prefab);
+                if (!_mine.Contains(prefab)) _mine.Add(prefab);
                 added++;
             }
 
             Util.Call(player, "UpdateKnownRecipesList");
             Util.Call(player, "UpdateAvailablePiecesList");
             Plugin.LogInfo("Büsche/Pilze im Kultivator: " + added + " (" + string.Join(", ", byItem.Values.Select(g => g.name)) + ")");
+        }
+
+        /// <summary>
+        /// Alle paar Sekunden prüfen, ob ein anderer Mod unsere Büsche wieder abgeschaltet, umgebaut
+        /// oder aus dem Kultivator entfernt hat – dann zurückholen.
+        /// </summary>
+        private static void Recheck(Player player)
+        {
+            if (Time.time < _nextCheck || _mine.Count == 0) return;
+            _nextCheck = Time.time + 5f;
+            var cultivator = ObjectDB.instance.GetItemPrefab("Cultivator");
+            var table = cultivator ? cultivator.GetComponent<ItemDrop>()?.m_itemData?.m_shared?.m_buildPieces : null;
+            if (table == null) return;
+            bool changed = false;
+            foreach (var prefab in _mine)
+            {
+                if (!prefab) continue;
+                var piece = prefab.GetComponent<Piece>();
+                var pick = prefab.GetComponent<Pickable>();
+                var drop = pick?.m_itemPrefab ? pick.m_itemPrefab.GetComponent<ItemDrop>() : null;
+                if (piece == null || drop == null) continue;
+                int cost = Mathf.Max(1, Cfg.BushCost.Value);
+                bool costOk = piece.m_resources != null && piece.m_resources.Length == 1 && piece.m_resources[0].m_resItem == drop && piece.m_resources[0].m_amount == cost;
+                if (piece.m_enabled && costOk && table.m_pieces.Contains(prefab)) continue;
+                piece.m_enabled = true;
+                piece.m_resources = new[] { new Piece.Requirement { m_resItem = drop, m_amount = cost, m_recover = false } };
+                if (!table.m_pieces.Contains(prefab)) table.m_pieces.Add(prefab);
+                changed = true;
+            }
+            if (changed)
+            {
+                Util.Call(player, "UpdateAvailablePiecesList");
+                Plugin.LogInfo("Büsche/Pilze: von einem anderen Mod geändert – wiederhergestellt");
+            }
         }
     }
 }

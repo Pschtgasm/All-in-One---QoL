@@ -50,6 +50,8 @@ namespace Pscht_QoL
         public static ConfigEntry<bool> BushesEnabled;
         public static ConfigEntry<int> BushCost;
         public static ConfigEntry<string> BushItems;
+        internal const string BushDefaultOld = "Raspberry,Blueberries,Cloudberry,Mushroom,MushroomYellow,MushroomBlue,MushroomSmokePuff";
+        internal const string BushDefault = BushDefaultOld + ",Thistle";
         public static ConfigEntry<bool> GridEnabled;
         public static readonly Stored<int> GridWidth = new Stored<int>("Raster.Breite", 3);
         public static readonly Stored<int> GridLength = new Stored<int>("Raster.Laenge", 3);
@@ -387,11 +389,13 @@ namespace Pscht_QoL
             PlantGrowSeconds = c.Bind(s, "Wachstumszeit (Sekunden)", 0f,
                 D("So viele Sekunden braucht jede Pflanze und jeder Setzling bis zur Ernte (für alle gleich). Beispiel: 600 = 10 Minuten. 0 = nichts ändern, jede Pflanze behält ihre normale Zeit aus Valheim.", "je nach Pflanze ca. 3000–5000 s (50–80 Minuten)", F(0f, 100000f)));
             BushesEnabled = c.Bind(s, "Büsche/Pilze: Mit Kultivator pflanzen", true,
-                D("Himbeer-, Blaubeer-, Moltebeerbüsche und Pilze erscheinen im Kultivator (ohne Raster, ganz nah aneinander). Änderung erst nach Neustart.", "nicht pflanzbar"));
+                D("Himbeer-, Blaubeer-, Moltebeerbüsche, Pilze und Disteln erscheinen im Kultivator (ohne Raster, ganz nah aneinander). Sie wachsen nach dem Ernten wieder nach. Änderung erst nach Neustart.", "nicht pflanzbar"));
             BushCost = c.Bind(s, "Büsche/Pilze: Kosten (Stück)", 5,
                 D("So viele Beeren/Pilze kostet ein Busch bzw. Pilz. Änderung erst nach Neustart.", "–", I(1, 100)));
-            BushItems = c.Bind(s, "Büsche/Pilze: Liste", "Raspberry,Blueberries,Cloudberry,Mushroom,MushroomYellow,MushroomBlue,MushroomSmokePuff",
+            BushItems = c.Bind(s, "Büsche/Pilze: Liste", BushDefault,
                 D("Interne Item-Namen, durch Komma getrennt. Zu jedem wird der passende Busch/Pilz gesucht. Was der Kultivator schon kann (Jotunnpuffs, Magierkappe), wird automatisch übersprungen. Welche gefunden wurden, steht im LogOutput.log.", "–"));
+            // 1.2.0: Disteln dazu – alte Standardliste automatisch erweitern
+            if (BushItems.Value == BushDefaultOld) BushItems.Value = BushDefault;
             GridEnabled = c.Bind(s, "Raster: Aktiv", true,
                 D("Der Kultivator setzt Pflanzen und Setzlinge im Raster (Vorschau zeigt alle Plätze). Größe im Spiel mit Strg + Pfeiltasten ändern – sie wird gemerkt. Abstand automatisch so eng, wie die Pflanze wachsen kann.", "aus (eine Pflanze pro Klick)"));
             GridWiderKey = c.Bind(s, "Raster: Taste breiter", new KeyboardShortcut(KeyCode.RightArrow, KeyCode.LeftControl), D("", "–"));

@@ -40,7 +40,7 @@
 | Area | What it does (default) |
 |---|---|
 | **Taming** | Fast taming (5 s) · fast breeding and growing up · offspring can get +1 star · all tames can be commanded · **LAlt+F** all follow · **LAlt+G** all stay · **LAlt+H** call all to you · lost tames come back on their own (from 40 m) · tames follow through portals · tames are rescued instead of dying (not when killed by a player) · tame and wild animals eat from chests nearby |
-| **Planting** | Plant everything in every biome · growth time in seconds · **cultivator grid**: plant in a grid, size with Ctrl + arrow keys · plant **berry bushes and mushrooms** with the cultivator |
+| **Planting** | Plant everything in every biome · growth time in seconds · **cultivator grid**: plant in a grid, size with Ctrl + arrow keys · plant **berry bushes, mushrooms and thistles** with the cultivator (5 each, they grow back after harvesting) |
 | **Craft from chests** | Crafting, building, smelting and buying use materials from chests nearby (50 m) |
 | **Player** | Carry weight · build distance · interaction distance · auto-pickup range |
 | **Items** | Stack size ×20 · weight ×0.5 · no movement penalty from gear · items float |
@@ -127,7 +127,7 @@ Marlthon-ValheimQol · xtavim-BetterTames · Alpus-BreedingTweaks · Advize-Plan
 | Bereich | Was es macht (Standard) |
 |---|---|
 | **Zähmen** | Schnell zähmen (5 s) · schnelle Zucht und Wachstum · Nachwuchs kann +1 Stern bekommen · alle Tiere befehlbar · **LAlt+F** alle folgen · **LAlt+G** alle bleiben · **LAlt+H** alle herholen · verlorene Tiere kommen von selbst zurück (ab 40 m) · Tiere folgen durch Portale · Tiere werden gerettet statt zu sterben (nicht durch Spieler) · zahme und wilde Tiere fressen aus Kisten |
-| **Pflanzen** | Alles in jedem Biom pflanzen · Wachstumszeit in Sekunden · **Kultivator-Raster**: im Raster pflanzen, Größe mit Strg + Pfeiltasten · **Beerenbüsche und Pilze** mit dem Kultivator pflanzen |
+| **Pflanzen** | Alles in jedem Biom pflanzen · Wachstumszeit in Sekunden · **Kultivator-Raster**: im Raster pflanzen, Größe mit Strg + Pfeiltasten · **Beerenbüsche, Pilze und Disteln** mit dem Kultivator pflanzen (je 5 Stück, wachsen nach dem Ernten nach) |
 | **Aus Kisten herstellen** | Herstellen, Bauen, Schmelzen und Kaufen nehmen Material aus Kisten in der Nähe (50 m) |
 | **Spieler** | Tragkraft · Baudistanz · Interaktions-Reichweite · Aufsammel-Reichweite |
 | **Items** | Stapel ×20 · Gewicht ×0,5 · keine Bewegungsstrafe durch Ausrüstung · Items schwimmen |
