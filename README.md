@@ -63,7 +63,7 @@
 | **Death** | Skill loss factor · keep equipped gear · optionally keep hotbar and food |
 | **Sea serpents** | Spawn chance factor and max number in the ocean |
 | **Steam achievements** | Achievements also work with mods and cheats · unlocks achievements you already earned · removes the "cheated" mark from items |
-| **Quick connect** | Button in the main menu that joins your favourite server directly (address in the config) |
+| **Quick connect** | Button in the main menu that joins your favourite server directly (address and optional password in the config) |
 
 ### Keys
 
@@ -155,7 +155,7 @@ Marlthon-ValheimQol · xtavim-BetterTames · Alpus-BreedingTweaks · Advize-Plan
 | **Tod** | Skill-Verlust-Faktor · angelegte Ausrüstung behalten · auf Wunsch Schnellleiste und Essen behalten |
 | **Seeschlangen** | Spawn-Chance-Faktor und Höchstzahl im Ozean |
 | **Steam-Erfolge** | Erfolge auch mit Mods und Cheats · schon verdiente Erfolge werden nachgeholt · Cheat-Markierung an Items wird entfernt |
-| **Schnellzugriff Server** | Knopf im Hauptmenü, der direkt auf deinen Server verbindet (Adresse in der Konfig) |
+| **Schnellzugriff Server** | Knopf im Hauptmenü, der direkt auf deinen Server verbindet (Adresse und auf Wunsch Passwort in der Konfig) |
 
 ### Tasten
 

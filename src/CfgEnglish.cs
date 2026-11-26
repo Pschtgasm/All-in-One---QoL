@@ -31,6 +31,8 @@ namespace Pscht_QoL
             ["Server suchen oder IP eintippen"] = "search the server or type the IP",
             ["Adresse mit Port, z.B. 123.45.67.89:2456 oder meinserver.de:2456. Leer = kein Knopf."] = "Address with port, e.g. 123.45.67.89:2456 or myserver.com:2456. Empty = no button.",
             ["Name auf dem Knopf, z.B. Team Pscht. Leer = die Adresse wird angezeigt."] = "Name on the button, e.g. Team Pscht. Empty = the address is shown.",
+            ["Freiwillig: Passwort des Servers. Dann wird es beim Verbinden über den Knopf automatisch eingegeben. Leer = Valheim fragt wie gewohnt. Achtung: steht als lesbarer Text in dieser Datei, also die Datei nicht weitergeben."] = "Optional: the server password. It is then entered automatically when you connect with the button. Empty = Valheim asks as usual. Note: it is stored as readable text in this file, so do not share the file.",
+            ["Passwort jedes Mal eintippen"] = "type the password every time",
             ["Alle Einstellungen dieses Abschnitts ein/aus."] = "Turns all settings of this section on/off.",
             ["aus"] = "off",
             ["Wie lange das Zähmen eines gefütterten Tieres dauert."] = "How long taming a fed animal takes.",

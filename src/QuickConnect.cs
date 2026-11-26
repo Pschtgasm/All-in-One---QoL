@@ -18,6 +18,7 @@ namespace Pscht_QoL
 
         private static void Postfix(FejdStartup __instance)
         {
+            ZNet_ClientHandshake_QuickPassword.Pending = false;
             try { Add(__instance); } catch (System.Exception e) { Plugin.LogWarn("Schnellzugriff: " + e.Message); }
         }
 
@@ -68,12 +69,34 @@ namespace Pscht_QoL
                 return;
             }
             var data = new ServerJoinData(new ServerJoinDataDedicated(addr));
+            ZNet_ClientHandshake_QuickPassword.Pending = true;   // gespeichertes Passwort nur für diesen Beitritt
             // wie eine Einladung: Server merken, Charakter-Auswahl zeigen, "Start" verbindet
             if (Util.Call(fs, "ProceedJoinRequest", data) == null && AccessTools.Method(typeof(FejdStartup), "ProceedJoinRequest") == null)
             {
                 fs.SetServerToJoin(data);
                 fs.JoinServer();
             }
+        }
+    }
+
+    /// <summary>
+    /// Fragt der Server nach dem Passwort und ist eins gespeichert, wird es automatisch eingegeben
+    /// (nur beim Beitritt über den Schnellzugriff-Knopf). Ohne gespeichertes Passwort fragt Valheim wie gewohnt.
+    /// </summary>
+    [HarmonyPatch(typeof(ZNet), "RPC_ClientHandshake")]
+    internal static class ZNet_ClientHandshake_QuickPassword
+    {
+        internal static bool Pending;
+
+        private static void Postfix(ZNet __instance, object[] __args)
+        {
+            if (!Pending) return;
+            Pending = false;
+            bool needPassword = __args != null && __args.Length > 1 && __args[1] is bool b && b;
+            string pwd = Cfg.QuickPassword.Value;
+            if (!needPassword || string.IsNullOrEmpty(pwd)) return;
+            Util.Call(__instance, "OnPasswordEntered", pwd);
+            Plugin.LogInfo("Schnellzugriff: gespeichertes Passwort verwendet");
         }
     }
 }

@@ -331,6 +331,7 @@ namespace Pscht_QoL
         public static ConfigEntry<bool> QuickEnabled;
         public static ConfigEntry<string> QuickAddress;
         public static ConfigEntry<string> QuickName;
+        public static ConfigEntry<string> QuickPassword;
 
         // ---------- Hilfen ----------
 
@@ -819,6 +820,8 @@ namespace Pscht_QoL
                 D("Adresse mit Port, z.B. 123.45.67.89:2456 oder meinserver.de:2456. Leer = kein Knopf.", "–"));
             QuickName = c.Bind(s, "Server: Name", "",
                 D("Name auf dem Knopf, z.B. Team Pscht. Leer = die Adresse wird angezeigt.", "–"));
+            QuickPassword = c.Bind(s, "Server: Passwort", "",
+                D("Freiwillig: Passwort des Servers. Dann wird es beim Verbinden über den Knopf automatisch eingegeben. Leer = Valheim fragt wie gewohnt. Achtung: steht als lesbarer Text in dieser Datei, also die Datei nicht weitergeben.", "Passwort jedes Mal eintippen"));
 
         }
 
