@@ -1,6 +1,6 @@
 @echo off
 setlocal EnableDelayedExpansion
-set "MODVERSION=1.0.0"
+set "MODVERSION=1.1.0"
 cd /d "%~dp0"
 echo ============================================
 echo   Pscht - All in One QoL %MODVERSION% - Build

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0
+- New icon (Team Pscht, Deep North style).
+- README: Team Pscht branding, links to other Team Pscht mods, support section with bug report and idea forms on GitHub.
+
 ## 1.0.0
 - First public release. All-in-one quality of life for Valheim, every feature can be switched on/off in the config (sections 00–22), with server sync.
 - Taming & breeding, planting in every biome, cultivator grid, bushes/mushrooms with the cultivator.

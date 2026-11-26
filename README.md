@@ -1,5 +1,7 @@
 # Pscht - All in One QoL
 
+*A Valheim mod by **Team Pscht** · ein Valheim-Mod von **Team Pscht***
+
 **One mod instead of 13.** Taming, planting, crafting from chests, chest labels, quick stack, portals with names and targets, extra slots, a second hotbar, radar, timers, a clock and much more – all in one mod, all configurable in **one** file.
 
 - Every area has its own on/off switch, every key can be changed.
@@ -102,7 +104,12 @@ Marlthon-ValheimQol · xtavim-BetterTames · Alpus-BreedingTweaks · Advize-Plan
 
 ## Problems?
 
-`BepInEx\LogOutput.log` shows at start: `Pscht - All in One QoL 1.0.0 geladen (X Patches OK, Y fehlgeschlagen)`. If a patch fails, only that feature is off – everything else keeps working.
+`BepInEx\LogOutput.log` shows at start: `Pscht - All in One QoL 1.1.0 geladen (X Patches OK, Y fehlgeschlagen)`. If a patch fails, only that feature is off – everything else keeps working.
+
+## More from Team Pscht
+
+- [Viking's Feast](https://thunderstore.io/c/valheim/p/Pscht/VikingsFeast/) – new dishes, meads, animal feed and a Runic Cauldron that grows with your journey.
+- All Team Pscht mods: [thunderstore.io/c/valheim/p/Pscht](https://thunderstore.io/c/valheim/p/Pscht/) · source and support: [github.com/Pschtgasm](https://github.com/Pschtgasm)
 
 ---
 
@@ -181,4 +188,9 @@ Diese Mods ausschalten, wenn du diesen Mod nutzt: siehe Liste oben unter *Replac
 
 ## Probleme?
 
-`BepInEx\LogOutput.log` zeigt beim Start: `Pscht - All in One QoL 1.0.0 geladen (X Patches OK, Y fehlgeschlagen)`. Fällt ein Patch aus, fehlt nur diese Funktion – der Rest läuft weiter.
+`BepInEx\LogOutput.log` zeigt beim Start: `Pscht - All in One QoL 1.1.0 geladen (X Patches OK, Y fehlgeschlagen)`. Fällt ein Patch aus, fehlt nur diese Funktion – der Rest läuft weiter.
+
+## Mehr von Team Pscht
+
+- [Viking's Feast](https://thunderstore.io/c/valheim/p/Pscht/VikingsFeast/) – neue Gerichte, Mets, Tierfutter und ein Runenkessel, der mit deiner Reise wächst.
+- Alle Mods von Team Pscht: [thunderstore.io/c/valheim/p/Pscht](https://thunderstore.io/c/valheim/p/Pscht/) · Quellcode und Support: [github.com/Pschtgasm](https://github.com/Pschtgasm)
