@@ -10,9 +10,8 @@ namespace Pscht_QoL
         private static readonly Dictionary<string, string> Map = new Dictionary<string, string>
         {
             // 1.2.0: Trophäen, Tod, Seeschlangen, Steam-Erfolge
-            ["Trophäen-Chance jedes Monsters und Tieres in Prozent vom Normalwert (höchstens 100 % Gesamtchance). 100 = normal, 200 = doppelt so oft, 50 = halb so oft. Bosse lassen ihre Trophäe sowieso immer fallen."] = "Trophy chance of every monster and animal in percent of the normal value (total chance at most 100 %). 100 = normal, 200 = twice as often, 50 = half as often. Bosses always drop their trophy anyway.",
-            ["100 (z.B. Greyling 10 %, Troll 50 %)"] = "100 (e.g. greyling 10 %, troll 50 %)",
-            ["Jede Trophäe fällt mindestens mit dieser Chance. 100 = jedes Monster lässt immer seine Trophäe fallen. 0 = nur der Faktor zählt."] = "Every trophy drops with at least this chance. 100 = every monster always drops its trophy. 0 = only the factor counts.",
+            ["So wahrscheinlich lässt jedes Monster und Tier seine Trophäe fallen. 0 = nie, 50 = jedes zweite Mal, 100 = immer. Gilt für alle gleich. Bosse lassen ihre Trophäe sowieso immer fallen. Für die normalen Chancen „Aktiv“ ausschalten."] = "How likely every monster and animal drops its trophy. 0 = never, 50 = every second time, 100 = always. Same for all. Bosses always drop their trophy anyway. For the normal chances switch off \"Aktiv\".",
+            ["je nach Monster (z.B. Greyling 10 %, Troll 50 %)"] = "depends on the monster (e.g. greyling 10 %, troll 50 %)",
             ["Wie viel Skill du beim Tod verlierst, mal diesen Faktor. 0 = kein Verlust, 0.5 = halb so viel, 1 = normal. Kommazahlen mit PUNKT."] = "How much skill you lose on death, times this factor. 0 = no loss, 0.5 = half as much, 1 = normal. Write decimals with a DOT.",
             ["Angelegte Waffen, Rüstung, Umhang, Gürtel usw. bleiben beim Tod an dir. Der Rest kommt wie gewohnt in den Grabstein."] = "Equipped weapons, armor, cape, belt etc. stay on you when you die. Everything else goes into the tombstone as usual.",
             ["alles in den Grabstein"] = "everything goes into the tombstone",
@@ -20,7 +19,7 @@ namespace Pscht_QoL
             ["kommt in den Grabstein"] = "goes into the tombstone",
             ["Gegessenes Essen wirkt nach dem Tod weiter (Lebenspunkte und Ausdauer bleiben)."] = "Food you have eaten keeps working after death (health and stamina stay).",
             ["Essen weg"] = "food is gone",
-            ["Chance, dass im Ozean eine Seeschlange erscheint, in Prozent vom Normalwert. 100 = normal, 200 = doppelt so oft, 1000 = zehnmal so oft, 0 = keine Seeschlangen mehr. Gilt nach dem nächsten Einloggen."] = "Chance that a sea serpent appears in the ocean, in percent of the normal value. 100 = normal, 200 = twice as often, 1000 = ten times as often, 0 = no more sea serpents. Takes effect after logging in again.",
+            ["So wahrscheinlich erscheint im Ozean eine Seeschlange, wenn das Spiel es versucht (nachts oder bei Sturm). 0 = nie, 5 = normal, 100 = jedes Mal. Gilt nach dem nächsten Einloggen."] = "How likely a sea serpent appears in the ocean when the game tries (at night or in storms). 0 = never, 5 = normal, 100 = every time. Takes effect after logging in again.",
             ["So viele Seeschlangen dürfen gleichzeitig in deiner Nähe sein. 0 = nicht ändern. Gilt nach dem nächsten Einloggen."] = "This many sea serpents may be near you at the same time. 0 = do not change. Takes effect after logging in again.",
             ["Steam-Erfolge gibt es auch mit Mods und nach Cheats (Konsole, devcommands, Weltmodifikatoren). Valheim sperrt sie sonst, sobald ein Mod geladen ist."] = "Get Steam achievements even with mods and after cheats (console, devcommands, world modifiers). Otherwise Valheim locks them as soon as a mod is loaded.",
             ["mit Mods oder Cheats keine Erfolge"] = "no achievements with mods or cheats",
