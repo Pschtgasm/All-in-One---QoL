@@ -779,7 +779,7 @@ namespace Pscht_QoL
             // ---------- 23 Trophäen ----------
             s = TrophySection;
             TrophyEnabled = c.Bind(s, "Aktiv", true, D("Alle Einstellungen dieses Abschnitts ein/aus.", "aus"));
-            TrophyFactor = c.Bind(s, "Trophäen: Drop-Chance (%)", "50",
+            TrophyFactor = c.Bind(s, "Trophäen: Drop-Chance (%)", "Vanilla",
                 D("Wahrscheinlichkeit in Prozent, dass ein Monster oder Tier seine Trophäe fallen lässt. Vanilla oder eine Zahl von 0 bis 100.", "Vanilla (je nach Monster, z.B. Greyling 10 %, Troll 50 %)"));
 
             // ---------- 24 Tod ----------

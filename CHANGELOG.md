@@ -1,7 +1,7 @@
 # Changelog
 
 ## 1.2.0
-- Trophies: one drop chance for all monsters, Vanilla or 0–100 % (default 50).
+- Trophies: one drop chance for all monsters, Vanilla or 0–100 % (default Vanilla).
 - Death tweaks: skill loss factor, keep equipped gear (default on), optionally keep hotbar and food.
 - Sea serpents: spawn chance in % (0 = never, 5 = normal, 100 = always), max number, optionally also during the day and in any weather.
 - Steam achievements: work with mods and cheats, unlock already earned achievements on login, clear cheated item marks.
