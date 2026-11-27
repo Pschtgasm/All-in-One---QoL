@@ -14,7 +14,9 @@ namespace Pscht_QoL
         private static void Postfix(CharacterDrop __instance)
         {
             if (!Cfg.TrophyEnabled.Value || __instance.m_drops == null) return;
-            float chance = Mathf.Clamp01(Cfg.TrophyFactor.Value / 100f);
+            string v = (Cfg.TrophyFactor.Value ?? "").Trim().Replace("%", "").Replace(',', '.');
+            if (!float.TryParse(v, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float pct)) return;   // "Vanilla" oder ungültig: normale Chancen
+            float chance = Mathf.Clamp01(pct / 100f);
             foreach (var d in __instance.m_drops)
             {
                 var item = d?.m_prefab != null ? d.m_prefab.GetComponent<ItemDrop>() : null;

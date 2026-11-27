@@ -10,8 +10,8 @@ namespace Pscht_QoL
         private static readonly Dictionary<string, string> Map = new Dictionary<string, string>
         {
             // 1.2.0: Trophäen, Tod, Seeschlangen, Steam-Erfolge
-            ["Wahrscheinlichkeit in Prozent, dass ein Monster oder Tier seine Trophäe fallen lässt. 20 = 20 % Chance, 60 = 60 % Chance, 0 = nie, 100 = immer. Gilt für alle gleich. Bosse lassen ihre Trophäe sowieso immer fallen. Für die normalen Chancen „Aktiv“ ausschalten."] = "Chance in percent that a monster or animal drops its trophy. 20 = 20 % chance, 60 = 60 % chance, 0 = never, 100 = always. Same for all. Bosses always drop their trophy anyway. For the normal chances switch off \"Aktiv\".",
-            ["je nach Monster (z.B. Greyling 10 %, Troll 50 %)"] = "depends on the monster (e.g. greyling 10 %, troll 50 %)",
+            ["Wahrscheinlichkeit in Prozent, dass ein Monster oder Tier seine Trophäe fallen lässt. Vanilla oder eine Zahl von 0 bis 100."] = "Chance in percent that a monster or animal drops its trophy. Vanilla or a number from 0 to 100.",
+            ["Vanilla (je nach Monster, z.B. Greyling 10 %, Troll 50 %)"] = "Vanilla (depends on the monster, e.g. greyling 10 %, troll 50 %)",
             ["Wie viel Skill du beim Tod verlierst, mal diesen Faktor. 0 = kein Verlust, 0.5 = halb so viel, 1 = normal. Kommazahlen mit PUNKT."] = "How much skill you lose on death, times this factor. 0 = no loss, 0.5 = half as much, 1 = normal. Write decimals with a DOT.",
             ["Angelegte Waffen, Rüstung, Umhang, Gürtel usw. bleiben beim Tod an dir. Der Rest kommt wie gewohnt in den Grabstein."] = "Equipped weapons, armor, cape, belt etc. stay on you when you die. Everything else goes into the tombstone as usual.",
             ["alles in den Grabstein"] = "everything goes into the tombstone",

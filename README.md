@@ -59,7 +59,7 @@
 | **Extra slots** | **4 armor slots**, wishbone/wisp, **belt** (works in addition!), trinket, **key slot** (swamp crypt key and other door keys), **3 food slots** (eat with **Ctrl+Y / X / C**), **shield slot** (shield is equipped with one-handed weapons) · **second hotbar** with 8 slots (**Alt+1 … Alt+8**) · after death everything goes back into its slots |
 | **Radar** | Dungeon entrances, villages, ruins, tar pits, runestones, shipwrecks, ores, bushes … as pins on the map · window with **F7** |
 | **Inventory helpers** | **Favorites**: middle-click an item – used items are refilled from chests nearby · **compare** weapons, shields and armor in the tooltip · keep weapons in hand at stations · **colored durability bar** |
-| **Trophies** | Trophy drop chance for all monsters in % (0 = never, 100 = always) |
+| **Trophies** | Trophy drop chance for all monsters: Vanilla or 0–100 % |
 | **Death** | Skill loss factor · keep equipped gear · optionally keep hotbar and food |
 | **Sea serpents** | Spawn chance in % (0 = never, 5 = normal, 100 = always), max number, optionally also by day and in any weather |
 | **Steam achievements** | Achievements also work with mods and cheats · unlocks achievements you already earned · removes the "cheated" mark from items |
@@ -151,7 +151,7 @@ Marlthon-ValheimQol · xtavim-BetterTames · Alpus-BreedingTweaks · Advize-Plan
 | **Extra-Slots** | **4 Rüstungsslots**, Wünschelrute/Irrlicht, **Gürtel** (wirkt zusätzlich!), Schmuck, **Schlüssel-Slot** (Krypta-Schlüssel aus dem Sumpf und andere Türschlüssel), **3 Essensslots** (essen mit **Strg+Y / X / C**), **Schild-Slot** (Schild wird bei Einhandwaffen angelegt) · **zweite Schnellleiste** mit 8 Slots (**Alt+1 … Alt+8**) · nach dem Tod kommt alles zurück in die Slots |
 | **Radar** | Dungeon-Eingänge, Dörfer, Ruinen, Teergruben, Runensteine, Schiffswracks, Erze, Büsche … als Pins auf der Karte · Fenster mit **F7** |
 | **Inventar-Hilfen** | **Favoriten**: Mausrad-Klick auf ein Item – Verbrauchtes wird aus Kisten aufgefüllt · **Vergleich** von Waffen, Schilden und Rüstung im Tooltip · Waffen an Stationen in der Hand behalten · **farbige Haltbarkeits-Leiste** |
-| **Trophäen** | Trophäen-Chance aller Monster in % (0 = nie, 100 = immer) |
+| **Trophäen** | Trophäen-Chance aller Monster: Vanilla oder 0–100 % |
 | **Tod** | Skill-Verlust-Faktor · angelegte Ausrüstung behalten · auf Wunsch Schnellleiste und Essen behalten |
 | **Seeschlangen** | Spawn-Chance in % (0 = nie, 5 = normal, 100 = immer), Höchstzahl, auf Wunsch auch tagsüber und bei jedem Wetter |
 | **Steam-Erfolge** | Erfolge auch mit Mods und Cheats · schon verdiente Erfolge werden nachgeholt · Cheat-Markierung an Items wird entfernt |

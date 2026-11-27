@@ -310,7 +310,7 @@ namespace Pscht_QoL
 
         // ---------- 23 Trophäen ----------
         public static ConfigEntry<bool> TrophyEnabled;
-        public static ConfigEntry<float> TrophyFactor;
+        public static ConfigEntry<string> TrophyFactor;
         // ---------- 24 Tod ----------
         public static ConfigEntry<bool> DeathEnabled;
         public static ConfigEntry<float> DeathSkillLoss;
@@ -779,8 +779,8 @@ namespace Pscht_QoL
             // ---------- 23 Trophäen ----------
             s = TrophySection;
             TrophyEnabled = c.Bind(s, "Aktiv", true, D("Alle Einstellungen dieses Abschnitts ein/aus.", "aus"));
-            TrophyFactor = c.Bind(s, "Trophäen: Drop-Chance (%)", 50f,
-                D("Wahrscheinlichkeit in Prozent, dass ein Monster oder Tier seine Trophäe fallen lässt. 20 = 20 % Chance, 60 = 60 % Chance, 0 = nie, 100 = immer. Gilt für alle gleich. Bosse lassen ihre Trophäe sowieso immer fallen. Für die normalen Chancen „Aktiv“ ausschalten.", "je nach Monster (z.B. Greyling 10 %, Troll 50 %)", F(0f, 100f)));
+            TrophyFactor = c.Bind(s, "Trophäen: Drop-Chance (%)", "50",
+                D("Wahrscheinlichkeit in Prozent, dass ein Monster oder Tier seine Trophäe fallen lässt. Vanilla oder eine Zahl von 0 bis 100.", "Vanilla (je nach Monster, z.B. Greyling 10 %, Troll 50 %)"));
 
             // ---------- 24 Tod ----------
             s = DeathSection;
