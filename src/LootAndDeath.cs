@@ -49,6 +49,11 @@ namespace Pscht_QoL
         {
             __state = null;
             if (!Cfg.DeathEnabled.Value || __instance != Player.m_localPlayer) return true;
+            if (Cfg.DeathKeepInventory.Value)
+            {
+                Plugin.LogInfo("Tod: ganzes Inventar behalten, kein Grabstein");
+                return false;
+            }
             var inv = __instance.GetInventory();
             var list = Util.GetField(inv, "m_inventory") as List<ItemDrop.ItemData>;
             if (inv == null || list == null) return true;

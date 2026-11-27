@@ -217,6 +217,7 @@ namespace Pscht_QoL
         internal static bool KeepOnDeath(ItemDrop.ItemData it, int b)
         {
             if (it?.m_shared == null || b < 0 || it.m_gridPos.y < b || !Cfg.DeathEnabled.Value) return false;
+            if (Cfg.DeathKeepInventory.Value) return true;
             var k = KindAt(it.m_gridPos.x, it.m_gridPos.y - b);
             return (k == Kind.Quick && Cfg.DeathKeepHotbar.Value) || (k == Kind.Food && Cfg.DeathKeepFood.Value);
         }

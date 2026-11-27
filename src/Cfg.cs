@@ -317,6 +317,7 @@ namespace Pscht_QoL
         public static ConfigEntry<bool> DeathKeepEquipped;
         public static ConfigEntry<bool> DeathKeepHotbar;
         public static ConfigEntry<bool> DeathKeepFood;
+        public static ConfigEntry<bool> DeathKeepInventory;
         // ---------- 25 Seeschlangen ----------
         public static ConfigEntry<bool> SerpentEnabled;
         public static ConfigEntry<float> SerpentChance;
@@ -793,6 +794,8 @@ namespace Pscht_QoL
                 D("Die oberste Inventarreihe (Tasten 1–8) und die 2. Schnellleiste bleiben beim Tod in deinem Inventar.", "kommt in den Grabstein"));
             DeathKeepFood = c.Bind(s, "Behalten: Essen", false,
                 D("Gegessenes Essen wirkt nach dem Tod weiter (Lebenspunkte und Ausdauer bleiben), und das Essen in den Essensslots bleibt bei dir.", "Essen weg"));
+            DeathKeepInventory = c.Bind(s, "Behalten: Ganzes Inventar", false,
+                D("Das ganze Inventar bleibt beim Tod bei dir, auch alle Extra-Slots. Es gibt keinen Grabstein.", "alles in den Grabstein"));
 
             // ---------- 25 Seeschlangen ----------
             s = SerpentSection;

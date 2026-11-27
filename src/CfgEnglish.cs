@@ -18,6 +18,7 @@ namespace Pscht_QoL
             ["Die oberste Inventarreihe (Tasten 1–8) und die 2. Schnellleiste bleiben beim Tod in deinem Inventar."] = "The top inventory row (keys 1–8) and the 2nd hotbar stay in your inventory when you die.",
             ["kommt in den Grabstein"] = "goes into the tombstone",
             ["Gegessenes Essen wirkt nach dem Tod weiter (Lebenspunkte und Ausdauer bleiben), und das Essen in den Essensslots bleibt bei dir."] = "Food you have eaten keeps working after death (health and stamina stay), and the food in the food slots stays with you.",
+            ["Das ganze Inventar bleibt beim Tod bei dir, auch alle Extra-Slots. Es gibt keinen Grabstein."] = "Your whole inventory stays with you when you die, including all extra slots. There is no tombstone.",
             ["Essen weg"] = "food is gone",
             ["So wahrscheinlich erscheint im Ozean eine Seeschlange, wenn das Spiel es versucht (nachts oder bei Sturm). 0 = nie, 5 = normal, 100 = jedes Mal. Gilt nach dem nächsten Einloggen."] = "How likely a sea serpent appears in the ocean when the game tries (at night or in storms). 0 = never, 5 = normal, 100 = every time. Takes effect after logging in again.",
             ["So viele Seeschlangen dürfen gleichzeitig in deiner Nähe sein. 0 = nicht ändern. Gilt nach dem nächsten Einloggen."] = "This many sea serpents may be near you at the same time. 0 = do not change. Takes effect after logging in again.",
