@@ -60,7 +60,7 @@
 | **Radar** | Dungeon entrances, villages, ruins, tar pits, runestones, shipwrecks, ores, bushes … as pins on the map · window with **F7** |
 | **Inventory helpers** | **Favorites**: middle-click an item – used items are refilled from chests nearby · **compare** weapons, shields and armor in the tooltip · keep weapons in hand at stations · **colored durability bar** |
 | **Trophies** | Trophy drop chance for all monsters: Vanilla or 0–100 % |
-| **Death** | Skill loss factor · keep equipped gear · optionally keep hotbar and food |
+| **Death** | Skill loss factor · keep equipped gear · optionally keep both hotbars, food (also the food slots) or the whole inventory (no tombstone) |
 | **Sea serpents** | Spawn chance in % (0 = never, 5 = normal, 100 = always), max number, optionally also by day and in any weather |
 | **Steam achievements** | Achievements also work with mods and cheats · unlocks achievements you already earned · removes the "cheated" mark from items |
 | **Quick connect** | Button in the main menu that joins your favourite server directly (address and optional password in the config) |
@@ -152,7 +152,7 @@ Marlthon-ValheimQol · xtavim-BetterTames · Alpus-BreedingTweaks · Advize-Plan
 | **Radar** | Dungeon-Eingänge, Dörfer, Ruinen, Teergruben, Runensteine, Schiffswracks, Erze, Büsche … als Pins auf der Karte · Fenster mit **F7** |
 | **Inventar-Hilfen** | **Favoriten**: Mausrad-Klick auf ein Item – Verbrauchtes wird aus Kisten aufgefüllt · **Vergleich** von Waffen, Schilden und Rüstung im Tooltip · Waffen an Stationen in der Hand behalten · **farbige Haltbarkeits-Leiste** |
 | **Trophäen** | Trophäen-Chance aller Monster: Vanilla oder 0–100 % |
-| **Tod** | Skill-Verlust-Faktor · angelegte Ausrüstung behalten · auf Wunsch Schnellleiste und Essen behalten |
+| **Tod** | Skill-Verlust-Faktor · angelegte Ausrüstung behalten · auf Wunsch beide Schnellleisten, Essen (auch die Essensslots) oder das ganze Inventar behalten (kein Grabstein) |
 | **Seeschlangen** | Spawn-Chance in % (0 = nie, 5 = normal, 100 = immer), Höchstzahl, auf Wunsch auch tagsüber und bei jedem Wetter |
 | **Steam-Erfolge** | Erfolge auch mit Mods und Cheats · schon verdiente Erfolge werden nachgeholt · Cheat-Markierung an Items wird entfernt |
 | **Schnellzugriff Server** | Knopf im Hauptmenü, der direkt auf deinen Server verbindet (Adresse und auf Wunsch Passwort in der Konfig) |
