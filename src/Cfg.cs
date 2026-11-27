@@ -790,9 +790,9 @@ namespace Pscht_QoL
             DeathKeepEquipped = c.Bind(s, "Behalten: Angelegte Ausrüstung", true,
                 D("Angelegte Waffen, Rüstung, Umhang, Gürtel usw. bleiben beim Tod an dir. Der Rest kommt wie gewohnt in den Grabstein.", "alles in den Grabstein"));
             DeathKeepHotbar = c.Bind(s, "Behalten: Schnellleiste", false,
-                D("Die oberste Inventarreihe (Tasten 1–8) bleibt beim Tod in deinem Inventar.", "kommt in den Grabstein"));
+                D("Die oberste Inventarreihe (Tasten 1–8) und die 2. Schnellleiste bleiben beim Tod in deinem Inventar.", "kommt in den Grabstein"));
             DeathKeepFood = c.Bind(s, "Behalten: Essen", false,
-                D("Gegessenes Essen wirkt nach dem Tod weiter (Lebenspunkte und Ausdauer bleiben).", "Essen weg"));
+                D("Gegessenes Essen wirkt nach dem Tod weiter (Lebenspunkte und Ausdauer bleiben), und das Essen in den Essensslots bleibt bei dir.", "Essen weg"));
 
             // ---------- 25 Seeschlangen ----------
             s = SerpentSection;

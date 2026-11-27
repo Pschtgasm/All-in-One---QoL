@@ -53,11 +53,15 @@ namespace Pscht_QoL
             var list = Util.GetField(inv, "m_inventory") as List<ItemDrop.ItemData>;
             if (inv == null || list == null) return true;
 
-            // Schnellleiste (oberste Reihe) vorübergehend aus dem Inventar nehmen
-            if (Cfg.DeathKeepHotbar.Value)
+            // Schnellleiste (oberste Reihe) sowie 2. Schnellleiste/Essensslots (Extra-Slots) vorübergehend aus dem Inventar nehmen
+            int b = ExtraSlots.BaseHeight(inv);
+            System.Predicate<ItemDrop.ItemData> keep = i => i != null && ((Cfg.DeathKeepHotbar.Value && i.m_gridPos.y == 0) || ExtraSlots.KeepOnDeath(i, b));
+            var kept = list.FindAll(keep);
+            if (kept.Count > 0)
             {
-                __state = list.FindAll(i => i != null && i.m_gridPos.y == 0);
-                list.RemoveAll(i => i != null && i.m_gridPos.y == 0);
+                __state = kept;
+                list.RemoveAll(keep);
+                Plugin.LogInfo("Tod: " + kept.Count + " Items aus Schnellleisten/Essensslots behalten");
             }
             if (!Cfg.DeathKeepEquipped.Value) return true;   // Rest macht Valheim
 

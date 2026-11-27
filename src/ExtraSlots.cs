@@ -213,6 +213,14 @@ namespace Pscht_QoL
         internal static int BaseHeight(Inventory inv) =>
             inv != null && Extended.TryGetValue(inv, out var info) ? info.BaseHeight : -1;
 
+        /// <summary>Bleibt dieses Item beim Tod am Spieler? (2. Schnellleiste bei "Behalten: Schnellleiste", Essensslots bei "Behalten: Essen")</summary>
+        internal static bool KeepOnDeath(ItemDrop.ItemData it, int b)
+        {
+            if (it?.m_shared == null || b < 0 || it.m_gridPos.y < b || !Cfg.DeathEnabled.Value) return false;
+            var k = KindAt(it.m_gridPos.x, it.m_gridPos.y - b);
+            return (k == Kind.Quick && Cfg.DeathKeepHotbar.Value) || (k == Kind.Food && Cfg.DeathKeepFood.Value);
+        }
+
         internal static bool IsExtraRow(Inventory inv, int y)
         {
             int b = BaseHeight(inv);
@@ -373,7 +381,7 @@ namespace Pscht_QoL
             var parts = new List<string>();
             foreach (var it in inv.GetAllItems())
             {
-                if (it?.m_shared == null || it.m_gridPos.y < b) continue;
+                if (it?.m_shared == null || it.m_gridPos.y < b || KeepOnDeath(it, b)) continue;
                 parts.Add(ItemId(it) + "|" + it.m_gridPos.x + "|" + (it.m_gridPos.y - b));
             }
             if (parts.Count == 0) return;
@@ -849,7 +857,7 @@ namespace Pscht_QoL
             bool changed = false;
             foreach (var item in new List<ItemDrop.ItemData>(inv.GetAllItems()))
             {
-                if (item == null || item.m_gridPos.y < b) continue;
+                if (item == null || item.m_gridPos.y < b || ExtraSlots.KeepOnDeath(item, b)) continue;   // bleibt im Slot
                 var free = ExtraSlots.FindFreeNormal(inv);
                 if (free.x < 0) break;
                 item.m_gridPos = free;
