@@ -104,12 +104,12 @@ namespace Pscht_QoL
 
     // ===================== 25 Seeschlangen =====================
 
-    /// <summary>Spawn-Chance und Höchstzahl der Seeschlangen. Die Spawn-Listen sind geteilt, daher Originalwerte merken.</summary>
+    /// <summary>Spawn-Chance, Höchstzahl, Tageszeit und Wetter der Seeschlangen. Die Spawn-Listen sind geteilt, daher Originalwerte merken.</summary>
     [HarmonyPatch(typeof(SpawnSystem), "Awake")]
     internal static class SpawnSystem_Awake_Serpents
     {
-        private static readonly Dictionary<SpawnSystem.SpawnData, KeyValuePair<float, int>> Orig =
-            new Dictionary<SpawnSystem.SpawnData, KeyValuePair<float, int>>();
+        private class Org { public float Chance; public int Max; public bool Day, Night; public List<string> Env; }
+        private static readonly Dictionary<SpawnSystem.SpawnData, Org> Orig = new Dictionary<SpawnSystem.SpawnData, Org>();
 
         private static void Postfix(SpawnSystem __instance)
         {
@@ -122,12 +122,20 @@ namespace Pscht_QoL
                     if (d?.m_prefab == null || d.m_prefab.name != "Serpent") continue;
                     if (!Orig.TryGetValue(d, out var o))
                     {
-                        Orig[d] = o = new KeyValuePair<float, int>(d.m_spawnChance, d.m_maxSpawned);
-                        Plugin.LogInfo("Seeschlangen: normale Chance " + d.m_spawnChance + " %, max. " + d.m_maxSpawned);
+                        Orig[d] = o = new Org
+                        {
+                            Chance = d.m_spawnChance, Max = d.m_maxSpawned, Day = d.m_spawnAtDay, Night = d.m_spawnAtNight,
+                            Env = d.m_requiredEnvironments != null ? new List<string>(d.m_requiredEnvironments) : new List<string>()
+                        };
+                        Plugin.LogInfo("Seeschlangen: normale Chance " + d.m_spawnChance + " %, max. " + d.m_maxSpawned
+                            + ", Tag " + d.m_spawnAtDay + ", Nacht " + d.m_spawnAtNight + ", Wetter: " + (o.Env.Count > 0 ? string.Join(",", o.Env) : "alle"));
                     }
-                    if (!Cfg.SerpentEnabled.Value) { d.m_spawnChance = o.Key; d.m_maxSpawned = o.Value; continue; }
-                    d.m_spawnChance = Mathf.Clamp(Cfg.SerpentChance.Value, 0f, 100f);
-                    d.m_maxSpawned = Cfg.SerpentMax.Value > 0 ? Cfg.SerpentMax.Value : o.Value;
+                    bool on = Cfg.SerpentEnabled.Value;
+                    d.m_spawnChance = on ? Mathf.Clamp(Cfg.SerpentChance.Value, 0f, 100f) : o.Chance;
+                    d.m_maxSpawned = on && Cfg.SerpentMax.Value > 0 ? Cfg.SerpentMax.Value : o.Max;
+                    d.m_spawnAtDay = o.Day || (on && Cfg.SerpentDay.Value);
+                    d.m_spawnAtNight = o.Night || (on && Cfg.SerpentDay.Value);
+                    d.m_requiredEnvironments = on && Cfg.SerpentAnyWeather.Value ? new List<string>() : new List<string>(o.Env);
                 }
             }
         }

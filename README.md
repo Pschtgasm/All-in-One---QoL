@@ -61,7 +61,7 @@
 | **Inventory helpers** | **Favorites**: middle-click an item – used items are refilled from chests nearby · **compare** weapons, shields and armor in the tooltip · keep weapons in hand at stations · **colored durability bar** |
 | **Trophies** | Trophy drop chance for all monsters in % (0 = never, 100 = always) |
 | **Death** | Skill loss factor · keep equipped gear · optionally keep hotbar and food |
-| **Sea serpents** | Spawn chance in % (0 = never, 5 = normal, 100 = always) and max number in the ocean |
+| **Sea serpents** | Spawn chance in % (0 = never, 5 = normal, 100 = always), max number, optionally also by day and in any weather |
 | **Steam achievements** | Achievements also work with mods and cheats · unlocks achievements you already earned · removes the "cheated" mark from items |
 | **Quick connect** | Button in the main menu that joins your favourite server directly (address and optional password in the config) |
 
@@ -153,7 +153,7 @@ Marlthon-ValheimQol · xtavim-BetterTames · Alpus-BreedingTweaks · Advize-Plan
 | **Inventar-Hilfen** | **Favoriten**: Mausrad-Klick auf ein Item – Verbrauchtes wird aus Kisten aufgefüllt · **Vergleich** von Waffen, Schilden und Rüstung im Tooltip · Waffen an Stationen in der Hand behalten · **farbige Haltbarkeits-Leiste** |
 | **Trophäen** | Trophäen-Chance aller Monster in % (0 = nie, 100 = immer) |
 | **Tod** | Skill-Verlust-Faktor · angelegte Ausrüstung behalten · auf Wunsch Schnellleiste und Essen behalten |
-| **Seeschlangen** | Spawn-Chance in % (0 = nie, 5 = normal, 100 = immer) und Höchstzahl im Ozean |
+| **Seeschlangen** | Spawn-Chance in % (0 = nie, 5 = normal, 100 = immer), Höchstzahl, auf Wunsch auch tagsüber und bei jedem Wetter |
 | **Steam-Erfolge** | Erfolge auch mit Mods und Cheats · schon verdiente Erfolge werden nachgeholt · Cheat-Markierung an Items wird entfernt |
 | **Schnellzugriff Server** | Knopf im Hauptmenü, der direkt auf deinen Server verbindet (Adresse und auf Wunsch Passwort in der Konfig) |
 

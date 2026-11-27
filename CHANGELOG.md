@@ -3,7 +3,7 @@
 ## 1.2.0
 - Trophies: one drop chance in % for all monsters (0 = never, 100 = always, default 50).
 - Death tweaks: skill loss factor, keep equipped gear (default on), optionally keep hotbar and food.
-- Sea serpents: spawn chance in % (0 = never, 5 = normal, 100 = always) and max number.
+- Sea serpents: spawn chance in % (0 = never, 5 = normal, 100 = always), max number, optionally also during the day and in any weather.
 - Steam achievements: work with mods and cheats, unlock already earned achievements on login, clear cheated item marks.
 - Quick connect: main menu button that joins a server address from the config, optional saved password.
 

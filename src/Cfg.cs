@@ -321,6 +321,8 @@ namespace Pscht_QoL
         public static ConfigEntry<bool> SerpentEnabled;
         public static ConfigEntry<float> SerpentChance;
         public static ConfigEntry<int> SerpentMax;
+        public static ConfigEntry<bool> SerpentDay;
+        public static ConfigEntry<bool> SerpentAnyWeather;
         // ---------- 26 Steam-Erfolge ----------
         public static ConfigEntry<bool> AchievementsEnabled;
         public static ConfigEntry<bool> AchievementsSync;
@@ -799,6 +801,10 @@ namespace Pscht_QoL
                 D("So wahrscheinlich erscheint im Ozean eine Seeschlange, wenn das Spiel es versucht (nachts oder bei Sturm). 0 = nie, 5 = normal, 100 = jedes Mal. Gilt nach dem nächsten Einloggen.", "5", F(0f, 100f)));
             SerpentMax = c.Bind(s, "Seeschlangen: Max. Anzahl", 0,
                 D("So viele Seeschlangen dürfen gleichzeitig in deiner Nähe sein. 0 = nicht ändern. Gilt nach dem nächsten Einloggen.", "1", I(0, 10)));
+            SerpentDay = c.Bind(s, "Seeschlangen: Tagsüber", false,
+                D("Seeschlangen erscheinen auch tagsüber, nicht nur nachts. Gilt nach dem nächsten Einloggen.", "nur nachts"));
+            SerpentAnyWeather = c.Bind(s, "Seeschlangen: Bei jedem Wetter", false,
+                D("Seeschlangen erscheinen bei jedem Wetter, nicht nur bei Sturm. Zusammen mit „Tagsüber“ also immer. Gilt nach dem nächsten Einloggen.", "nachts oder bei Sturm"));
 
             // ---------- 26 Steam-Erfolge ----------
             s = AchievementSection;
