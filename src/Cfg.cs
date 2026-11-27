@@ -780,7 +780,7 @@ namespace Pscht_QoL
             s = TrophySection;
             TrophyEnabled = c.Bind(s, "Aktiv", true, D("Alle Einstellungen dieses Abschnitts ein/aus.", "aus"));
             TrophyFactor = c.Bind(s, "Trophäen: Drop-Chance (%)", 50f,
-                D("So wahrscheinlich lässt jedes Monster und Tier seine Trophäe fallen. 0 = nie, 50 = jedes zweite Mal, 100 = immer. Gilt für alle gleich. Bosse lassen ihre Trophäe sowieso immer fallen. Für die normalen Chancen „Aktiv“ ausschalten.", "je nach Monster (z.B. Greyling 10 %, Troll 50 %)", F(0f, 100f)));
+                D("Wahrscheinlichkeit in Prozent, dass ein Monster oder Tier seine Trophäe fallen lässt. 20 = 20 % Chance, 60 = 60 % Chance, 0 = nie, 100 = immer. Gilt für alle gleich. Bosse lassen ihre Trophäe sowieso immer fallen. Für die normalen Chancen „Aktiv“ ausschalten.", "je nach Monster (z.B. Greyling 10 %, Troll 50 %)", F(0f, 100f)));
 
             // ---------- 24 Tod ----------
             s = DeathSection;
