@@ -13,28 +13,6 @@
 
 ---
 
-## 🛠️ Support
-
-### English
-
-1. Select **Report a bug** or **Suggest an idea** below.
-2. Give the issue a short title, for example `[Bug] Chest sign does not show the picture`.
-3. For a bug, include the Valheim and All in One QoL versions and the steps to reproduce it. Your `BepInEx/LogOutput.log` helps a lot.
-
-### Deutsch
-
-1. Klicke unten auf **Bug melden** oder **Idee vorschlagen**.
-2. Gib dem Ticket einen kurzen Titel, zum Beispiel `[Bug] Schild auf der Kiste zeigt kein Bild`.
-3. Gib bei einem Bug die Versionen von Valheim und All in One QoL an, dazu die Schritte, mit denen der Fehler auftritt. Sehr hilfreich ist die Datei `BepInEx/LogOutput.log`.
-
-| Tickets / Issues | Bug melden / Report a bug | Idee vorschlagen / Suggest an idea | Changelog |
-| --- | --- | --- | --- |
-| [Tickets ansehen / View issues](https://github.com/Pschtgasm/All-in-One---QoL/issues) | [Bug melden / Report a bug](https://github.com/Pschtgasm/All-in-One---QoL/issues/new?template=bug_report.yml) | [Idee vorschlagen / Suggest an idea](https://github.com/Pschtgasm/All-in-One---QoL/issues/new?template=feature_request.yml) | [CHANGELOG.md](https://github.com/Pschtgasm/All-in-One---QoL/blob/main/CHANGELOG.md) |
-
-[All in One QoL auf Thunderstore / on Thunderstore](https://thunderstore.io/c/valheim/p/Pscht/AllInOne_QoL/)
-
----
-
 ## Features
 
 | Area | What it does (default) |
@@ -204,3 +182,25 @@ Diese Mods ausschalten, wenn du diesen Mod nutzt: siehe Liste oben unter *Replac
 
 - [Viking's Feast](https://thunderstore.io/c/valheim/p/Pscht/VikingsFeast/) – neue Gerichte, Mets, Tierfutter und ein Runenkessel, der mit deiner Reise wächst.
 - Alle Mods von Team Pscht: [thunderstore.io/c/valheim/p/Pscht](https://thunderstore.io/c/valheim/p/Pscht/) · Quellcode und Support: [github.com/Pschtgasm](https://github.com/Pschtgasm)
+
+---
+
+## 🛠️ Support
+
+### English
+
+1. Select **Report a bug** or **Suggest an idea** below.
+2. Give the issue a short title, for example `[Bug] Chest sign does not show the picture`.
+3. For a bug, include the Valheim and All in One QoL versions and the steps to reproduce it. Your `BepInEx/LogOutput.log` helps a lot.
+
+### Deutsch
+
+1. Klicke unten auf **Bug melden** oder **Idee vorschlagen**.
+2. Gib dem Ticket einen kurzen Titel, zum Beispiel `[Bug] Schild auf der Kiste zeigt kein Bild`.
+3. Gib bei einem Bug die Versionen von Valheim und All in One QoL an, dazu die Schritte, mit denen der Fehler auftritt. Sehr hilfreich ist die Datei `BepInEx/LogOutput.log`.
+
+| Tickets / Issues | Bug melden / Report a bug | Idee vorschlagen / Suggest an idea | Changelog |
+| --- | --- | --- | --- |
+| [Tickets ansehen / View issues](https://github.com/Pschtgasm/All-in-One---QoL/issues) | [Bug melden / Report a bug](https://github.com/Pschtgasm/All-in-One---QoL/issues/new?template=bug_report.yml) | [Idee vorschlagen / Suggest an idea](https://github.com/Pschtgasm/All-in-One---QoL/issues/new?template=feature_request.yml) | [CHANGELOG.md](https://github.com/Pschtgasm/All-in-One---QoL/blob/main/CHANGELOG.md) |
+
+[All in One QoL auf Thunderstore / on Thunderstore](https://thunderstore.io/c/valheim/p/Pscht/AllInOne_QoL/)
