@@ -778,8 +778,8 @@ namespace Pscht_QoL
             // ---------- 23 Trophäen ----------
             s = TrophySection;
             TrophyEnabled = c.Bind(s, "Aktiv", true, D("Alle Einstellungen dieses Abschnitts ein/aus.", "aus"));
-            TrophyFactor = c.Bind(s, "Trophäen: Chance-Faktor", 2f,
-                D("Die Trophäen-Chance jedes Monsters und Tieres mal diesen Faktor (höchstens 100 %). 2 = doppelt so oft, 1 = normal. Bosse lassen ihre Trophäe sowieso immer fallen. Kommazahlen mit PUNKT.", "1 (z.B. Greyling 10 %, Troll 50 %)", F(0f, 100f)));
+            TrophyFactor = c.Bind(s, "Trophäen: Chance (%)", 200f,
+                D("Trophäen-Chance jedes Monsters und Tieres in Prozent vom Normalwert (höchstens 100 % Gesamtchance). 100 = normal, 200 = doppelt so oft, 50 = halb so oft. Bosse lassen ihre Trophäe sowieso immer fallen.", "100 (z.B. Greyling 10 %, Troll 50 %)", F(0f, 10000f)));
             TrophyMinChance = c.Bind(s, "Trophäen: Mindest-Chance (%)", 0f,
                 D("Jede Trophäe fällt mindestens mit dieser Chance. 100 = jedes Monster lässt immer seine Trophäe fallen. 0 = nur der Faktor zählt.", "0", F(0f, 100f)));
 
@@ -798,8 +798,8 @@ namespace Pscht_QoL
             // ---------- 25 Seeschlangen ----------
             s = SerpentSection;
             SerpentEnabled = c.Bind(s, "Aktiv", true, D("Alle Einstellungen dieses Abschnitts ein/aus.", "aus"));
-            SerpentChance = c.Bind(s, "Seeschlangen: Spawn-Chance-Faktor", 1f,
-                D("Chance, dass im Ozean eine Seeschlange erscheint, mal diesen Faktor (höchstens 100 %). 2 = doppelt so oft, 0 = keine Seeschlangen mehr. Gilt nach dem nächsten Einloggen.", "1", F(0f, 20f)));
+            SerpentChance = c.Bind(s, "Seeschlangen: Spawn-Chance (%)", 100f,
+                D("Chance, dass im Ozean eine Seeschlange erscheint, in Prozent vom Normalwert. 100 = normal, 200 = doppelt so oft, 1000 = zehnmal so oft, 0 = keine Seeschlangen mehr. Gilt nach dem nächsten Einloggen.", "100", F(0f, 2000f)));
             SerpentMax = c.Bind(s, "Seeschlangen: Max. Anzahl", 0,
                 D("So viele Seeschlangen dürfen gleichzeitig in deiner Nähe sein. 0 = nicht ändern. Gilt nach dem nächsten Einloggen.", "1", I(0, 10)));
 
@@ -911,6 +911,15 @@ namespace Pscht_QoL
             FromSeconds(BushRegrowMinutes, "02 - Pflanzen", "Büsche/Pilze: Nachwachsen (Sekunden)");
             FromSeconds(DayMinutes, "18 - Tag, Nacht und Uhr", "Tag/Nacht: Tag (Sekunden)");
             FromSeconds(NightMinutes, "18 - Tag, Nacht und Uhr", "Tag/Nacht: Nacht (Sekunden)");
+            // Faktor -> Prozent (Trophäen, Seeschlangen)
+            void FromFactor(ConfigEntry<float> e, string section, string key)
+            {
+                string v = Old(section, key);
+                if (v != null && float.TryParse(v, NumberStyles.Float, CultureInfo.InvariantCulture, out float f) && f >= 0f)
+                    Take(e, Math.Round(f * 100f, 1).ToString(CultureInfo.InvariantCulture));
+            }
+            FromFactor(TrophyFactor, TrophySection, "Trophäen: Chance-Faktor");
+            FromFactor(SerpentChance, SerpentSection, "Seeschlangen: Spawn-Chance-Faktor");
 
             string sizes = Old("12 - Kisten", "Größe: Kistengrößen");
             if (sizes != null)

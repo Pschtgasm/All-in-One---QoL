@@ -1,9 +1,9 @@
 # Changelog
 
 ## 1.2.0
-- Trophies: trophy chance factor (default ×2) and optional minimum chance for all monsters.
+- Trophies: trophy chance in % of normal (default 200 %) and optional minimum chance for all monsters.
 - Death tweaks: skill loss factor, keep equipped gear (default on), optionally keep hotbar and food.
-- Sea serpents: spawn chance factor and max number.
+- Sea serpents: spawn chance in % of normal (100 = normal) and max number.
 - Steam achievements: work with mods and cheats, unlock already earned achievements on login, clear cheated item marks.
 - Quick connect: main menu button that joins a server address from the config, optional saved password.
 

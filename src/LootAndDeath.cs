@@ -14,7 +14,7 @@ namespace Pscht_QoL
         private static void Postfix(CharacterDrop __instance)
         {
             if (!Cfg.TrophyEnabled.Value || __instance.m_drops == null) return;
-            float factor = Cfg.TrophyFactor.Value, min = Cfg.TrophyMinChance.Value / 100f;
+            float factor = Cfg.TrophyFactor.Value / 100f, min = Cfg.TrophyMinChance.Value / 100f;
             foreach (var d in __instance.m_drops)
             {
                 var item = d?.m_prefab != null ? d.m_prefab.GetComponent<ItemDrop>() : null;
@@ -122,7 +122,7 @@ namespace Pscht_QoL
                     if (d?.m_prefab == null || d.m_prefab.name != "Serpent") continue;
                     if (!Orig.TryGetValue(d, out var o)) Orig[d] = o = new KeyValuePair<float, int>(d.m_spawnChance, d.m_maxSpawned);
                     if (!Cfg.SerpentEnabled.Value) { d.m_spawnChance = o.Key; d.m_maxSpawned = o.Value; continue; }
-                    d.m_spawnChance = Mathf.Clamp(o.Key * Cfg.SerpentChance.Value, 0f, 100f);
+                    d.m_spawnChance = Mathf.Clamp(o.Key * Cfg.SerpentChance.Value / 100f, 0f, 100f);
                     d.m_maxSpawned = Cfg.SerpentMax.Value > 0 ? Cfg.SerpentMax.Value : o.Value;
                 }
             }
