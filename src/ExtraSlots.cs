@@ -838,6 +838,8 @@ namespace Pscht_QoL
     [HarmonyPatch(typeof(Player), "CreateTombStone")]
     internal static class Player_CreateTombStone_ExtraSlots
     {
+        // Zuerst: Slot-Plätze merken und Items ins normale Inventar legen, bevor "Tod: Ausrüstung behalten" den Grabstein baut
+        [HarmonyPriority(Priority.First)]
         private static void Prefix(Player __instance)
         {
             var inv = __instance.GetInventory();
